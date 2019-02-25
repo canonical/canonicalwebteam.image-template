@@ -23,12 +23,14 @@ def image_template(path, alt, width, height):
         raise Exception("path should not contain a hostname")
 
     query = parse_qs(parse_result.query)
-    query['w'] = int(width)
-    query['h'] = int(height)
+    query["w"] = int(width)
+    query["h"] = int(height)
 
-    path = path.lstrip('/') + '?' + urlencode(query, doseq=True)
+    path = path.lstrip("/") + "?" + urlencode(query, doseq=True)
 
-    return template.render(path=path, alt=alt, width=width, height=height)
+    return template.render(
+        path=path, alt=alt, width=int(width), height=int(height)
+    )
 
 
 sys.modules[__name__] = image_template
