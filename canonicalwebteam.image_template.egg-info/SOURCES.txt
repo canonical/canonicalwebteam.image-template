@@ -1,0 +1,11 @@
+MANIFEST.in
+README.rst
+setup.py
+canonicalwebteam/__init__.py
+canonicalwebteam.image_template.egg-info/PKG-INFO
+canonicalwebteam.image_template.egg-info/SOURCES.txt
+canonicalwebteam.image_template.egg-info/dependency_links.txt
+canonicalwebteam.image_template.egg-info/requires.txt
+canonicalwebteam.image_template.egg-info/top_level.txt
+canonicalwebteam/image_template/__init__.py
+canonicalwebteam/templates/image_template.html
