@@ -11,12 +11,12 @@ env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
 
 
-def image_template(url, alt, width, height):
+def image_template(path, alt, width, height):
     """
     Generate image markup
     """
 
-    return template.render(url=url, alt=alt, width=width, height=height)
+    return template.render(path=path, alt=alt, width=width, height=height)
 
 
 sys.modules[__name__] = image_template
