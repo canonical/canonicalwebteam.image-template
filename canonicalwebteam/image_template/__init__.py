@@ -12,7 +12,7 @@ env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
 
 
-def image_template(path, alt, width, height):
+def image_template(path, alt, width, height, attributes={}):
     """
     Generate image markup
     """
@@ -26,10 +26,23 @@ def image_template(path, alt, width, height):
     query["w"] = int(width)
     query["h"] = int(height)
 
-    path = path.lstrip("/") + "?" + urlencode(query, doseq=True)
+    # Split out classes from attributes
+    # As we need to handle them specially
+    extra_classes = None
+
+    if "class" in attributes:
+        extra_classes = attributes["class"]
+        del attributes["class"]
+
+    path = parse_result.path.lstrip("/") + "?" + urlencode(query, doseq=True)
 
     return template.render(
-        path=path, alt=alt, width=int(width), height=int(height)
+        path=path,
+        alt=alt,
+        width=int(width),
+        height=int(height),
+        extra_classes=extra_classes,
+        attributes=attributes,
     )
 
 

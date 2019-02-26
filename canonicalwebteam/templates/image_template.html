@@ -7,7 +7,10 @@
   alt="{{ alt }}"
   width="{{ width }}"
   height="{{ height }}"
-  class="lazyload"
+  class="lazyload{% if extra_classes %} {{ extra_classes }}{% endif %}"
+{%- for attr_name, attr_value in attributes.items() %}
+  {{ attr_name }}="{{ attr_value }}"
+{%- endfor %}
 />
 
 <noscript>
@@ -20,5 +23,11 @@
     alt="{{ alt }}"
     width="{{ width }}"
     height="{{ height }}"
+{%- if extra_classes %}
+    class="{{ extra_classes }}"
+{%- endif %}
+{%- for attr_name, attr_value in attributes.items() %}
+    {{ attr_name }}="{{ attr_value }}"
+{%- endfor %}
   />
 </noscript>
