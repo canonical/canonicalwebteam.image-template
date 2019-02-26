@@ -132,8 +132,7 @@ All the above examples will generate the following markup:
                   ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 767w
                   ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 1030w"
       data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585" 
-      sizes="100vw"
-      alt="test"
+      alt="Operational dashboard"
       width="1040"
       height="585"
       class="lazyload"
@@ -141,7 +140,11 @@ All the above examples will generate the following markup:
     
     <noscript>
       <img
-        src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585"
+        srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 460w
+                ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 620w
+                ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 767w
+                ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 1030w"
+        src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585" 
         alt="Operational dashboard"
         width="1040"
         height="585"

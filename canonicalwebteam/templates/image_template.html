@@ -4,8 +4,7 @@
               {% if width > 720 %},https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/{{ path }} 767w{% endif %}
               {% if width > 990 %},https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/{{ path }} 1030w{% endif %}"
   data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/{{ path }}"
-  sizes="100vw"
-  alt="test"
+  alt="{{ alt }}"
   width="{{ width }}"
   height="{{ height }}"
   class="lazyload"
@@ -13,6 +12,10 @@
 
 <noscript>
   <img
+    srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/{{ path }} 460w
+            {% if width > 572 %},https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/https://assets.ubuntu.com/{{ path }} 620w{% endif %}
+            {% if width > 720 %},https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/{{ path }} 767w{% endif %}
+            {% if width > 990 %},https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/{{ path }} 1030w{% endif %}"
     src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/{{ path }}"
     alt="{{ alt }}"
     width="{{ width }}"
