@@ -15,12 +15,8 @@ will:
 Parameters
 ----------
 
--  ``path`` (mandatory string): The path to an image
-
-   -  if no hostname is provided (e.g.
-      ``/v1/9f6916dd-k8s-prometheus-light.png``) ``assets.ubuntu.com``
-      will be assumed
-
+-  ``url`` (mandatory string): The url to an image (e.g.
+   ``https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png``)
 -  ``alt`` (mandatory string): Alt text to describe the image
 -  ``width`` (mandatory integer): The number of pixels wide the image
    should be
@@ -41,11 +37,10 @@ Markup.
     from canonicalwebteam import image_template
 
     image_markup = image_template(
-        path="/v1/9f6916dd-k8s-prometheus-light.png",
+        url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png",
         alt="Operational dashboard",
         width="1040",
         height="585",
-        col="6",
         attributes={}
     )
 
@@ -98,7 +93,7 @@ Use it in templates:
 
     # templates/mytemplate.html
 
-    {% image path="/v1/9f6916dd-k8s-prometheus-light.png" alt="Operational dashboard" width="1040" height="585" %}
+    {% image url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" alt="Operational dashboard" width="1040" height="585" %}
 
 Flask usage
 ~~~~~~~~~~~
@@ -126,7 +121,7 @@ Use it in templates:
 
     {{
       image(
-        path="/v1/9f6916dd-k8s-prometheus-light.png",
+        url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png",
         alt="Operational dashboard",
         width="1040",
         height="585"
