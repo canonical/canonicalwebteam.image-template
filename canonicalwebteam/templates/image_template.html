@@ -1,15 +1,15 @@
 <img 
-  data-srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/{{ path }} 460w
+  data-srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/{{ path }} 460w
 {%- if width > 572 %}
-               ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/https://assets.ubuntu.com/{{ path }} 620w
+               ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/{{ path }} 620w
 {%- endif %}
 {%- if width > 720 %}
-               ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/{{ path }} 767w
+               ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/{{ path }} 767w
 {%- endif %}
 {%- if width > 990 %}
-               ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/{{ path }} 1030w
+               ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/{{ path }} 1030w
 {%- endif %}"
-  data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/{{ path }}"
+  data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_{{ width }}/{{ path }}"
   alt="{{ alt }}"
   width="{{ width }}"
   height="{{ height }}"
@@ -21,17 +21,17 @@
 
 <noscript>
   <img
-    srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/{{ path }} 460w
+    srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/{{ path }} 460w
   {%- if width > 572 %}
-            ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/https://assets.ubuntu.com/{{ path }} 620w
+            ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/{{ path }} 620w
   {%- endif %}
   {%- if width > 720 %}
-            ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/{{ path }} 767w
+            ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/{{ path }} 767w
   {%- endif %}
   {%- if width > 990 %}
-            ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/{{ path }} 1030w
+            ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/{{ path }} 1030w
   {%- endif %}"
-    src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/{{ path }}"
+    src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_{{ width }}/{{ path }}"
     alt="{{ alt }}"
     width="{{ width }}"
     height="{{ height }}"
