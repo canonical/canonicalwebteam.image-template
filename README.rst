@@ -1,21 +1,26 @@
 canonicalwebteam.image\_template
 ================================
 
-A module to generate performant HTML image markup for images hosted on
-``assets.ubuntu.com``. The markup will:
+A module to generate performant HTML image markup for images. The markup
+will:
 
 -  Use ``data-src`` attributes for
    `lazysizes <https://github.com/aFarkas/lazysizes>`__
 -  Use predefined ``srcset`` break points
--  Resize the image with ``?w=XX&h=XX`` query parameters
+-  Resize ``assets.ubuntu.com`` images with ``?w=XX&h=XX`` query
+   parameters
 -  Prefix all image URLs with cloudinary proxy URLs, for CDN and image
    transformations
 
 Parameters
 ----------
 
--  ``path`` (mandatory string): The path to an asset on
-   assets.ubuntu.com (e.g. ``/v1/9f6916dd-k8s-prometheus-light.png``)
+-  ``path`` (mandatory string): The path to an image
+
+   -  if no hostname is provided (e.g.
+      ``/v1/9f6916dd-k8s-prometheus-light.png``) ``assets.ubuntu.com``
+      will be assumed
+
 -  ``alt`` (mandatory string): Alt text to describe the image
 -  ``width`` (mandatory integer): The number of pixels wide the image
    should be
@@ -23,31 +28,40 @@ Parameters
    should be
 -  ``col`` (optional): The number of Vanilla columns the image should
    span (helps define break points efficiently)
+-  ``attributes`` (optional): A dict of ``HTMLElement`` attributes
 
 Usage
 -----
 
-The `image_template` function can be used directly to generate image Markup.
+The ``image_template`` function can be used directly to generate image
+Markup.
 
-```
-from canonicalwebteam import image_template
+.. code:: python3
 
-image_markup = image_template(
-    path="/v1/9f6916dd-k8s-prometheus-light.png",
-    alt="Operational dashboard",
-    width="1040",
-    height="585"
-)
-```
+    from canonicalwebteam import image_template
 
-However, the most common usage is to add it to Django or Flask template contexts, as an `image` function.
+    image_markup = image_template(
+        path="/v1/9f6916dd-k8s-prometheus-light.png",
+        alt="Operational dashboard",
+        width="1040",
+        height="585",
+        col="6",
+        attributes={}
+    )
+
+However, the most common usage is to add it to Django or Flask template
+contexts, as an ``image`` function.
 
 Add lazysizes
 ~~~~~~~~~~~~~
 
-The markup generated will use [lazysizes](https://github.com/aFarkas/lazysizes) format - it will use `data-src` instead of `src` and add the `lazyload` class.
+The markup generated will use
+`lazysizes <https://github.com/aFarkas/lazysizes>`__ format - it will
+use data-src instead of src and add the lazyload class.
 
-Therefore to use this plugin you need to have lazysizes loaded on your pages. The simplest way to achieve this is to include this in your `<head>`:
+Therefore to use this plugin you need to have lazysizes loaded on your
+pages. The simplest way to achieve this is to include this in your
+``<head>``:
 
 .. code:: html
 
@@ -137,7 +151,7 @@ All the above examples will generate the following markup:
       height="585"
       class="lazyload"
     />
-    
+
     <noscript>
       <img
         srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 460w

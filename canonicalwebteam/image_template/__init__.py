@@ -6,7 +6,6 @@ from urllib.parse import urlparse, parse_qs, urlencode
 # Packages
 from jinja2 import Environment, FileSystemLoader
 
-
 parent_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
@@ -18,13 +17,14 @@ def image_template(path, alt, width, height, attributes={}):
     """
 
     parse_result = urlparse(path)
+    hostname=  parse_result.netloc
+    if not hostname:
+        hostname = "https://assets.ubuntu.com/"
 
-    if parse_result.netloc:
-        raise Exception("path should not contain a hostname")
-
-    query = parse_qs(parse_result.query)
-    query["w"] = int(width)
-    query["h"] = int(height)
+        query = parse_qs(parse_result.query)
+        query["w"] = int(width)
+        query["h"] = int(height)
+        path = hostname + parse_result.path.lstrip("/") + "?" + urlencode(query, doseq=True)
 
     # Split out classes from attributes
     # As we need to handle them specially
@@ -34,7 +34,6 @@ def image_template(path, alt, width, height, attributes={}):
         extra_classes = attributes["class"]
         del attributes["class"]
 
-    path = parse_result.path.lstrip("/") + "?" + urlencode(query, doseq=True)
 
     return template.render(
         path=path,
