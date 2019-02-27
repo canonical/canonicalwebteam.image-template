@@ -65,4 +65,3 @@ def image_template(url, alt, width, height, attributes={}):
 
 
 sys.modules[__name__] = image_template
-canonicalwebteam/image_template/__init__.py

@@ -14,4 +14,5 @@ setup(
     description=("Generate <img> markup block for an image."),
     long_description=open("README.rst").read(),
     install_requires=["jinja2>=2"],
+    test_suite="tests",
 )

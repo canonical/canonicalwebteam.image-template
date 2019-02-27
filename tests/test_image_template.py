@@ -1,15 +1,27 @@
+# Standard library
 import unittest
-import sys
-from os.path import dirname, abspath
-module_dir = dirname(dirname(dirname(abspath(__file__))))
-sys.path.append(module_dir)
 
+# Local
 from canonicalwebteam import image_template
+
+
+asset_url = (
+    "https://assets.ubuntu.com/"
+    "v1/479958ed-vivid-hero-takeover-kylin.jpg"
+)
+non_asset_url = (
+    "https://dashboard.snapcraft.io/site_media/appmedia/"
+    "2018/10/Screenshot_from_2018-10-26_14-20-14.png"
+)
+non_hostname_url = (
+    "/static/images/Screenshot_from_2018-10-26_14-20-14.png"
+)
+
 
 class TestImageTemplate(unittest.TestCase):
     def test_returns_string(self):
         markup = image_template(
-            path="/v1/479958ed-vivid-hero-takeover-kylin.jpg",
+            url=asset_url,
             alt="test",
             width="1920",
             height="1080"
@@ -18,7 +30,7 @@ class TestImageTemplate(unittest.TestCase):
 
     def test_attributes(self):
         markup = image_template(
-            path="/v1/479958ed-vivid-hero-takeover-kylin.jpg",
+            url=asset_url,
             alt="test",
             width="1920",
             height="1080",
@@ -36,7 +48,7 @@ class TestImageTemplate(unittest.TestCase):
 
     def test_classes(self):
         markup = image_template(
-            path="/v1/479958ed-vivid-hero-takeover-kylin.jpg",
+            url=asset_url,
             alt="test",
             width="1920",
             height="1080",
@@ -44,49 +56,31 @@ class TestImageTemplate(unittest.TestCase):
                 "class": "test-title"
             }
         )
+        # Check custom class exists
         self.assertTrue(
             markup.find('class="test-title"') > -1,
         )
-
-
-class TestAssetUrls(unittest.TestCase):
-    def test_no_hostname_returns_assets_url(self):
-        path = "/v1/479958ed-vivid-hero-takeover-kylin.jpg"
-        markup = image_template(
-            path=path,
-            alt="test",
-            width="1920",
-            height="1080"
-        )
+        # Check lazyload class still exists
         self.assertTrue(
-            markup.find("https://assets.ubuntu.com" + path) > -1,
+            markup.find('class="lazyload test-title"') > -1,
         )
 
     def test_assets_url_has_width_and_height(self):
-        path = "/v1/479958ed-vivid-hero-takeover-kylin.jpg"
-        markup = image_template(
-            path=path,
+        markup_asset = image_template(
+            url=asset_url,
             alt="test",
             width="1920",
             height="1080"
         )
-        self.assertTrue(
-            markup.find("https://assets.ubuntu.com" + path + "?w=1920&h=1080") > -1,
-        )
-
-
-class TestCustomUrls(unittest.TestCase):
-    def test_no_hostname_returns_assets_url(self):
-        path = "/v1/479958ed-vivid-hero-takeover-kylin.jpg"
-        markup = image_template(
-            path=path,
+        markup_non_asset = image_template(
+            url=non_asset_url,
             alt="test",
             width="1920",
             height="1080"
         )
-        self.assertTrue(
-            markup.find(path) > -1,
-        )
+        self.assertTrue(asset_url + "?w=1920&h=1080" in markup_asset)
+        self.assertTrue("w_1920" not in markup_asset)
+        self.assertTrue("w_1920" in markup_non_asset)
 
 
 if __name__ == "__main__":
