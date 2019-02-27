@@ -2,3 +2,4 @@ dist/
 canonicalwebteam.image_template.egg-info
 __pycache__
 env*/
+.eggs/
