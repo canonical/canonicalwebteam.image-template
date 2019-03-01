@@ -34,16 +34,14 @@ def get_properties(img_tag):
         return False
 
     if url_parts.netloc == "assets.ubuntu.com":
-        # Use the assets server to resize the image
-        # so we aren't caching more than we need in cloudinary
-
+        # Get the width and height from the URL, if defined
         params = parse_qs(url_parts.query)
 
         if "w" in params:
             width = int(params["w"][0])
 
         if "h" in params:
-            width = int(params["h"][0])
+            height = int(params["h"][0])
 
     if not (width and height):
         # Download image
