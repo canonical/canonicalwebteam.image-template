@@ -15,8 +15,10 @@
       {%- endif %}
     {%- endif %}
   {%- endif %}"
-  data-sizes="(min-resolution: 144dpi) 200vw,
-              100vw"
+  {%- if width > 412 %}
+    data-sizes="(min-resolution: 144dpi) 100vw,
+              50vw"
+  {%- endif %}
   data-src="https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }}/{{ url }}"
   alt="{{ alt }}"
   width="{{ width }}"
@@ -45,8 +47,10 @@
       {%- endif %}
     {%- endif %}"
   {%- endif %}
-    sizes="(min-resolution: 144dpi) 100vw,
-           50vw"
+    {%- if width > 412 %}
+      sizes="(min-resolution: 144dpi) 100vw,
+              50vw"
+    {%- endif %}
     src="https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }}/{{ url }}"
     alt="{{ alt }}"
     width="{{ width }}"
