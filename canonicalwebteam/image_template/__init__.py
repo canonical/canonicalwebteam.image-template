@@ -30,7 +30,11 @@ def image_template(url, alt, width, height, attributes={}):
     if not url_parts.netloc:
         raise Exception("url must contain a hostname")
 
-    if url_parts.netloc == "assets.ubuntu.com":
+    if not url_parts.netloc == "assets.ubuntu.com":
+        # If not assets server, resize image on cloudinary
+        cloudinary_options.append("w_" + str(width))
+        cloudinary_options.append("h_" + str(height))
+    elif url_parts.path[-4:] != ".svg":
         # Use the assets server to resize the image
         # so we aren't caching more than we need in cloudinary
 
@@ -40,10 +44,6 @@ def image_template(url, alt, width, height, attributes={}):
         url_list = list(url_parts)
         url_list[4] = urlencode(query, doseq=True)
         url = urlunparse(url_list)
-    else:
-        # If not assets server, resize image on cloudinary
-        cloudinary_options.append("w_" + str(width))
-        cloudinary_options.append("h_" + str(height))
 
     # Split out classes from attributes
     # As we need to handle them specially
