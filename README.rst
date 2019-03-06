@@ -24,7 +24,9 @@ Parameters
    should be
 -  ``col`` (optional): The number of Vanilla columns the image should
    span (helps define break points efficiently)
--  ``attributes`` (optional): A dict of ``HTMLElement`` attributes
+-  ``extra_classes`` (optional): Class string to add to img element
+-  `extra attributes` (optional): Extra ``<img>`` attributes (e.g. 
+   ``id``) can be passed as additional arguments
 
 Usage
 -----
@@ -40,8 +42,7 @@ Markup.
         url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png",
         alt="Operational dashboard",
         width="1040",
-        height="585",
-        attributes={}
+        height="585"
     )
 
 However, the most common usage is to add it to Django or Flask template

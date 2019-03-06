@@ -28,7 +28,8 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1920",
             height="1080",
-            attributes={"id": "test", "title": "test title"},
+            id="test",
+            title="test title",
         )
         self.assertTrue(markup.find('id="test"') > -1)
         self.assertTrue(markup.find('title="test title"') > -1)
@@ -39,7 +40,7 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1920",
             height="1080",
-            attributes={"class": "test-title"},
+            extra_classes="test-title",
         )
         # Check custom class exists
         self.assertTrue(markup.find('class="test-title"') > -1)
