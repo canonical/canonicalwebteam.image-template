@@ -30,7 +30,7 @@ def image_template(url, alt, width, height, **attributes):
     if not url_parts.netloc:
         raise Exception("url must contain a hostname")
 
-    if url_parts.netloc != "assets.ubuntu.com":
+    if not url_parts.netloc == "assets.ubuntu.com":
         # If not assets server, resize image on cloudinary
         cloudinary_options.append("w_" + str(width))
         cloudinary_options.append("h_" + str(height))
