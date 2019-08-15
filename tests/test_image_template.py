@@ -81,28 +81,6 @@ class TestImageTemplate(unittest.TestCase):
         self.assertTrue(markup_asset.find("x2"))
         self.assertTrue(markup_asset.find("w%3D3840%26h%3D2160"))
 
-    def test_assets_url_has_width_and_height(self):
-        markup_asset = image_template(
-            url=asset_url,
-            alt="test",
-            width="1920",
-            height="1080",
-            hi_def=False,
-        )
-        markup_non_asset = image_template(
-            url=non_asset_url,
-            alt="test",
-            width="1920",
-            height="1080",
-            hi_def=False,
-        )
-
-        self.assertTrue(
-            encoded_asset_url + "%3Fw%3D1920%26h%3D1080" in markup_asset
-        )
-        self.assertTrue("w_1920" not in markup_asset)
-        self.assertTrue("w_1920" in markup_non_asset)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -138,8 +138,8 @@ All the above examples will generate the following markup:
 .. code:: html
 
     <img 
-      data-srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png%3Fw%3D2080%26h%3D1170 x2"
-      data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png%3Fw%3D1040%26h%3D585" 
+      data-srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_2080,h_1170/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png x2"
+      data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_1040,h_585/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" 
       alt="Operational dashboard"
       width="1040"
       height="585"
@@ -148,8 +148,8 @@ All the above examples will generate the following markup:
 
     <noscript>
       <img
-        srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png%3Fw%3D2080%26h%3D1170 x2"
-        src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png%3Fw%3D1040%26h%3D585" 
+        srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_2080,h_1170/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png x2"
+        src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_1040,h_585/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" 
         alt="Operational dashboard"
         width="1040"
         height="585"
@@ -172,13 +172,18 @@ Asset server resize:
 https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585
 1040 x 585 - 221.21kb
 
-Cloudinary x2 resize:
+Asset server resize x2 + Cloudinary x2 resize:
 https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png%3Fw%3D2080%26h%3D1170
 2080 x 1170 - 194.97kb
 
-Cloudinary resize:
+Asset server resize x1 + Cloudinary x1 resize:
 https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize/https%3A//assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png%3Fw%3D1040%26h%3D585
 1040 x 585 - 109.38kb
 
+Cloudinary x2 resize:
+https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_2080,h_1170/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png
+2080 x 1170 - 163.38
 
-
+Cloudinary x1 resize:
+https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_1040,h_585/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png
+1040 x 585 - 62.80kb

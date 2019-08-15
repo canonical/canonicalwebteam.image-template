@@ -1,7 +1,7 @@
 # Standard library
 import os
 import sys
-from urllib.parse import urlparse, urlunparse, parse_qs, urlencode, quote
+from urllib.parse import urlparse
 
 # Packages
 from jinja2 import Environment, FileSystemLoader
@@ -33,26 +33,12 @@ def image_template(url, alt, width, height, hi_def, **attributes):
     std_def_cloudinary_options = cloudinary_options.copy()
     hi_def_cloudinary_options = cloudinary_options.copy()
 
-    if not url_parts.netloc == "assets.ubuntu.com":
-        std_def_cloudinary_options.append("w_" + str(width))
-        std_def_cloudinary_options.append("h_" + str(height))
+    std_def_cloudinary_options.append("w_" + str(width))
+    std_def_cloudinary_options.append("h_" + str(height))
 
-        if hi_def:
-            hi_def_cloudinary_options.append("w_" + str(int(width) * 2))
-            hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
-    elif url_parts.path[-4:] != ".svg":
-        query = parse_qs(url_parts.query)
-
-        if hi_def:
-            query["w"] = int(width) * 2
-            query["h"] = int(height) * 2
-        else:
-            query["w"] = int(width)
-            query["h"] = int(height)
-
-        url_list = list(url_parts)
-        url_list[4] = urlencode(query, doseq=True)
-        url = quote(urlunparse(url_list))
+    if hi_def:
+        hi_def_cloudinary_options.append("w_" + str(int(width) * 2))
+        hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
 
     # Split out classes from attributes
     # as we need to handle them specially
