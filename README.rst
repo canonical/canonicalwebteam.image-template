@@ -22,8 +22,7 @@ Parameters
    should be
 -  ``height`` (mandatory integer): The number of pixels high the image
    should be
--  ``col`` (optional): The number of Vanilla columns the image should
-   span (helps define break points efficiently)
+-  ``hi_def`` (mandatory boolean): Has an image been uploaded 2x the width and height of the desired size
 -  ``extra_classes`` (optional): Class string to add to img element
 -  `extra attributes` (optional): Extra ``<img>`` attributes (e.g. 
    ``id``) can be passed as additional arguments
@@ -42,7 +41,8 @@ Markup.
         url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png",
         alt="Operational dashboard",
         width="1040",
-        height="585"
+        height="585",
+        hi_def=True
     )
 
 However, the most common usage is to add it to Django or Flask template
@@ -94,7 +94,7 @@ Use it in templates:
 
     # templates/mytemplate.html
 
-    {% image url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" alt="Operational dashboard" width="1040" height="585" %}
+    {% image url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" alt="Operational dashboard" width="1040" height="585" hi_def=True %}
 
 Flask usage
 ~~~~~~~~~~~
@@ -125,7 +125,8 @@ Use it in templates:
         url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png",
         alt="Operational dashboard",
         width="1040",
-        height="585"
+        height="585",
+        hi_def: True,
       ) | safe
     }}
 
@@ -137,11 +138,8 @@ All the above examples will generate the following markup:
 .. code:: html
 
     <img 
-      data-srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 460w
-                  ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 620w
-                  ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 767w
-                  ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 1030w"
-      data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585" 
+      data-srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_2080,h_1170/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png x2"
+      data-src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_1040,h_585/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" 
       alt="Operational dashboard"
       width="1040"
       height="585"
@@ -150,13 +148,37 @@ All the above examples will generate the following markup:
 
     <noscript>
       <img
-        srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_412/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 460w
-                ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_572/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 620w
-                ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_720/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 767w
-                ,https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_990/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585 1030w"
-        src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585" 
+        srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_2080,h_1170/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png x2"
+        src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_1040,h_585/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" 
         alt="Operational dashboard"
         width="1040"
         height="585"
       />
     </noscript>
+
+
+File sizes
+~~~~~~~~~~
+
+Source:
+https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png
+2560 x 1440 - 300.62kb
+
+Asset server x2 resize:
+https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=2080&h=1170
+2080 x 1170 - 595.67kb
+
+Asset server resize:
+https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png?w=1040&h=585
+1040 x 585 - 221.21kb
+
+Cloudinary x2 resize:
+https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_2080,h_1170/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png
+2080 x 1170 - 163.12kb
+
+Cloudinary resize:
+https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,fl_sanitize,w_1040,h_585/https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png
+1040 x 585 - 62.80kb
+
+
+

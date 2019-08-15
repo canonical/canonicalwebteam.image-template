@@ -1,7 +1,7 @@
 # Standard library
 import os
 import sys
-from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+from urllib.parse import urlparse
 
 # Packages
 from jinja2 import Environment, FileSystemLoader
@@ -11,7 +11,7 @@ env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
 
 
-def image_template(url, alt, width, height, **attributes):
+def image_template(url, alt, width, height, hi_def, **attributes):
     """
     Generate image markup
     """
@@ -30,23 +30,17 @@ def image_template(url, alt, width, height, **attributes):
     if not url_parts.netloc:
         raise Exception("url must contain a hostname")
 
-    if not url_parts.netloc == "assets.ubuntu.com":
-        # If not assets server, resize image on cloudinary
-        cloudinary_options.append("w_" + str(width))
-        cloudinary_options.append("h_" + str(height))
-    elif url_parts.path[-4:] != ".svg":
-        # Use the assets server to resize the image (for non SVGs)
-        # so we aren't caching more than we need in cloudinary
+    std_def_cloudinary_options = cloudinary_options.copy()
+    std_def_cloudinary_options.append("w_" + str(width))
+    std_def_cloudinary_options.append("h_" + str(height))
 
-        query = parse_qs(url_parts.query)
-        query["w"] = int(width)
-        query["h"] = int(height)
-        url_list = list(url_parts)
-        url_list[4] = urlencode(query, doseq=True)
-        url = urlunparse(url_list)
+    hi_def_cloudinary_options = cloudinary_options.copy()
+    if hi_def:
+        hi_def_cloudinary_options.append("w_" + str(int(width) * 2))
+        hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
 
     # Split out classes from attributes
-    # As we need to handle them specially
+    # as we need to handle them specially
     extra_classes = None
 
     if "extra_classes" in attributes:
@@ -56,9 +50,11 @@ def image_template(url, alt, width, height, **attributes):
     return template.render(
         url=url,
         alt=alt,
-        cloudinary_options=",".join(cloudinary_options),
+        std_def_cloudinary_options=",".join(std_def_cloudinary_options),
+        hi_def_cloudinary_options=",".join(hi_def_cloudinary_options),
         width=int(width),
         height=int(height),
+        hi_def=hi_def,
         extra_classes=extra_classes,
         attributes=attributes,
     )
