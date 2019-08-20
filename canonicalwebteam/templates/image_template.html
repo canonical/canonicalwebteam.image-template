@@ -1,65 +1,31 @@
 <img
-  {%- if width > 412 %}
-    data-srcset="https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_412/{{ url }} 460w
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_824/{{ url }} 920w
-    {%- if width > 572 %}
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_572/{{ url }} 620w
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_1144/{{ url }} 1240w
-      {%- if width > 720 %}
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_720/{{ url }} 767w
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_1440/{{ url }} 1534w
-        {%- if width > 990 %}
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_990/{{ url }} 1030w
-               ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_1980/{{ url }} 2060w
-        {%- endif %}
-      {%- endif %}
-    {%- endif %}"
-  {%- endif %}
-  {%- if width > 412 %}
-    data-sizes="(min-resolution: 144dpi) 100vw,
-              50vw"
-  {%- endif %}
-  data-src="https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }}/{{ url }}"
+  {% if hi_def %}
+   data-srcset="https://res.cloudinary.com/canonical/image/fetch/{{ hi_def_cloudinary_options }}/{{ url }} 2x"
+  {% endif %}
+  data-src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
   alt="{{ alt }}"
   width="{{ width }}"
   height="{{ height }}"
   class="lazyload{% if extra_classes %} {{ extra_classes }}{% endif %}"
-{%- for attr_name, attr_value in attributes.items() %}
-  {{ attr_name }}="{{ attr_value }}"
-{%- endfor %}
+  {% for attr_name, attr_value in attributes.items() %}
+    {{ attr_name }}="{{ attr_value }}"
+  {% endfor %}
 />
 
 <noscript>
   <img
-  {%- if width > 412 %}
-    srcset="https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_412/{{ url }} 460w
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_824/{{ url }} 920w
-    {%- if width > 572 %}
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_572/{{ url }} 620w
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_1144/{{ url }} 1240w
-      {%- if width > 720 %}
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_720/{{ url }} 767w
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_1440/{{ url }} 1534w
-        {%- if width > 990 %}
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_990/{{ url }} 1030w
-                 ,https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }},w_1980/{{ url }} 2060w
-        {%- endif %}
-      {%- endif %}
-    {%- endif %}"
-  {%- endif %}
-    {%- if width > 412 %}
-      sizes="(min-resolution: 144dpi) 100vw,
-              50vw"
-    {%- endif %}
-    src="https://res.cloudinary.com/canonical/image/fetch/{{ cloudinary_options }}/{{ url }}"
+    {% if hi_def %}
+      srcset="https://res.cloudinary.com/canonical/image/fetch/{{ hi_def_cloudinary_options }}/{{ url }} 2x"
+    {% endif %}
+    src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
     alt="{{ alt }}"
     width="{{ width }}"
     height="{{ height }}"
-{%- if extra_classes %}
-    class="{{ extra_classes }}"
-{%- endif %}
-{%- for attr_name, attr_value in attributes.items() %}
-    {{ attr_name }}="{{ attr_value }}"
-{%- endfor %}
+    {% if extra_classes %}
+      class="{{ extra_classes }}"
+    {% endif %}
+    {% for attr_name, attr_value in attributes.items() %}
+      {{ attr_name }}="{{ attr_value }}"
+    {% endfor %}
   />
 </noscript>
