@@ -126,7 +126,7 @@ Use it in templates:
         alt="Operational dashboard",
         width="1040",
         height="585",
-        hi_def: True,
+        hi_def=True,
       ) | safe
     }}
 
