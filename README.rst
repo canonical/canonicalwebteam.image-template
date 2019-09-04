@@ -61,7 +61,7 @@ pages. The simplest way to achieve this is to include this in your
 
 .. code:: html
 
-    <script src="https://assets.ubuntu.com/v1/842d27d3-lazysizes.min.js" async=""></script>
+    <script src="https://assets.ubuntu.com/v1/842d27d3-lazysizes.min.js" async></script>
 
 Django usage
 ~~~~~~~~~~~~
