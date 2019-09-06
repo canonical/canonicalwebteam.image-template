@@ -63,6 +63,19 @@ pages. The simplest way to achieve this is to include this in your
 
     <script src="https://assets.ubuntu.com/v1/842d27d3-lazysizes.min.js" async></script>
 
+NOTE: When JS is disabled Chrome will display a broken image and alt text for the lazysizes version which can cause layout issues.
+It's advisable to add the CSS below to the sites CSS.
+
+.. code:: css
+
+   .lazyload {
+      visibility: hidden;
+      height: 0;
+      width: 0;
+      margin: 0;
+      padding: 0;
+   }
+
 Django usage
 ~~~~~~~~~~~~
 
