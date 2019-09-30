@@ -38,8 +38,8 @@ class TestImageTemplate(unittest.TestCase):
             title="test title",
             hi_def=False,
         )
-        self.assertTrue(markup.find('id="test"') > -1)
-        self.assertTrue(markup.find('title="test title"') > -1)
+        self.assertIn('id="test"', markup)
+        self.assertIn('title="test title"', markup)
 
     def test_classes(self):
         markup = image_template(
@@ -51,9 +51,23 @@ class TestImageTemplate(unittest.TestCase):
             hi_def=False,
         )
         # Check custom class exists
-        self.assertTrue(markup.find('class="test-title"') > -1)
+        self.assertIn('class="test-title"', markup)
+
         # Check lazyload class still exists
-        self.assertTrue(markup.find('class="lazyload test-title"') > -1)
+        self.assertIn('class="lazyload test-title"', markup)
+
+    def test_optional_lazy(self):
+        markup = image_template(
+            url=asset_url,
+            alt="test",
+            width="1920",
+            height="1080",
+            extra_classes="test-title",
+            hi_def=False,
+            lazy=False,
+        )
+        # Check lazyload class is not present
+        self.assertIn('class="test-title"', markup)
 
     def test_hi_def(self):
         markup = image_template(

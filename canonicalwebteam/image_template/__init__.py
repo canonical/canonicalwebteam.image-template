@@ -48,6 +48,13 @@ def image_template(url, alt, width, height, hi_def, **attributes):
         extra_classes = attributes["extra_classes"]
         del attributes["extra_classes"]
 
+    # Add lazy load class by default
+    lazy = True
+
+    if "lazy" in attributes:
+        lazy = attributes["lazy"]
+        del attributes["lazy"]
+
     return template.render(
         url=url,
         alt=alt,
@@ -56,6 +63,7 @@ def image_template(url, alt, width, height, hi_def, **attributes):
         width=int(width),
         height=int(height),
         hi_def=hi_def,
+        lazy=lazy,
         extra_classes=extra_classes,
         attributes=attributes,
     )
