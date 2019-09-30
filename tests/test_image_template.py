@@ -55,6 +55,19 @@ class TestImageTemplate(unittest.TestCase):
         # Check lazyload class still exists
         self.assertTrue(markup.find('class="lazyload test-title"') > -1)
 
+    def test_optional_lazy(self):
+        markup = image_template(
+            url=asset_url,
+            alt="test",
+            width="1920",
+            height="1080",
+            extra_classes="test-title",
+            hi_def=False,
+            lazy=False,
+        )
+        # Check lazyload class is not present
+        self.assertTrue(markup.find('class="test-title"') > -1)
+
     def test_hi_def(self):
         markup = image_template(
             url=non_asset_url,

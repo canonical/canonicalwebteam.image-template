@@ -1,12 +1,12 @@
 <img
   {% if hi_def %}
-   data-srcset="https://res.cloudinary.com/canonical/image/fetch/{{ hi_def_cloudinary_options }}/{{ url }} 2x"
+   {% if lazy %}data-{% endif %}srcset="https://res.cloudinary.com/canonical/image/fetch/{{ hi_def_cloudinary_options }}/{{ url }} 2x"
   {% endif %}
-  data-src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
+  {% if lazy %}data-{% endif %}src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
   alt="{{ alt }}"
   width="{{ width }}"
   height="{{ height }}"
-  class="lazyload{% if extra_classes %} {{ extra_classes }}{% endif %}"
+  class="{% if lazy %}lazyload{% endif %} {% if extra_classes %}{{ extra_classes }}{% endif %}"
   {% for attr_name, attr_value in attributes.items() %}
     {{ attr_name }}="{{ attr_value }}"
   {% endfor %}
