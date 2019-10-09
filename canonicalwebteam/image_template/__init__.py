@@ -11,7 +11,7 @@ env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
 
 
-def image_template(url, alt, width, height, hi_def, **attributes):
+def image_template(url, alt, width, height, hi_def, loading="lazy", attrs={}):
     """
     Generate image markup
     """
@@ -40,21 +40,6 @@ def image_template(url, alt, width, height, hi_def, **attributes):
         hi_def_cloudinary_options.append("w_" + str(int(width) * 2))
         hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
 
-    # Split out classes from attributes
-    # as we need to handle them specially
-    extra_classes = None
-
-    if "extra_classes" in attributes:
-        extra_classes = attributes["extra_classes"]
-        del attributes["extra_classes"]
-
-    # Add lazy load class by default
-    lazy = True
-
-    if "lazy" in attributes:
-        lazy = attributes["lazy"]
-        del attributes["lazy"]
-
     return template.render(
         url=url,
         alt=alt,
@@ -63,9 +48,8 @@ def image_template(url, alt, width, height, hi_def, **attributes):
         width=int(width),
         height=int(height),
         hi_def=hi_def,
-        lazy=lazy,
-        extra_classes=extra_classes,
-        attributes=attributes,
+        loading=loading,
+        attrs=attrs,
     )
 
 
