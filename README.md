@@ -1,6 +1,6 @@
 # canonicalwebteam.image-template
 
-![PyPI](https://img.shields.io/pypi/v/canonicalwebteam.image-template)
+[![PyPI](https://img.shields.io/pypi/v/canonicalwebteam.image-template)](https://pypi.org/project/canonicalwebteam.image-template/)
 [![CircleCI](https://circleci.com/gh/canonical-web-and-design/canonicalwebteam.image-template.svg?style=shield)](https://circleci.com/gh/canonical-web-and-design/canonicalwebteam.image-template)
 [![Code coverage](https://codecov.io/gh/canonical-web-and-design/canonicalwebteam.image-template/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/canonicalwebteam.image-template)
 
