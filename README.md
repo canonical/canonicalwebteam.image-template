@@ -1,5 +1,8 @@
 # canonicalwebteam.image-template
 
+![PyPI](https://img.shields.io/pypi/v/canonicalwebteam.image-template)
+[![CircleCI](https://circleci.com/gh/canonical-web-and-design/canonicalwebteam.image-template.svg?style=shield)](https://circleci.com/gh/canonical-web-and-design/canonicalwebteam.image-template)
+
 A module to generate performant HTML image markup for images. The markup
 will:
 
