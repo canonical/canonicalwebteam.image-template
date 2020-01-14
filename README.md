@@ -1,7 +1,7 @@
 # canonicalwebteam.image-template
 
 [![PyPI](https://img.shields.io/pypi/v/canonicalwebteam.image-template)](https://pypi.org/project/canonicalwebteam.image-template/)
-[![CircleCI](https://circleci.com/gh/canonical-web-and-design/canonicalwebteam.image-template.svg?style=shield)](https://circleci.com/gh/canonical-web-and-design/canonicalwebteam.image-template)
+[![Tests](https://github.com/canonical-web-and-design/canonicalwebteam.image-template/workflows/Tests/badge.svg)](https://github.com/canonical-web-and-design/canonicalwebteam.image-template/actions?query=workflow%3ATests)
 [![Code coverage](https://codecov.io/gh/canonical-web-and-design/canonicalwebteam.image-template/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/canonicalwebteam.image-template)
 
 A module to generate performant HTML image markup for images. The markup

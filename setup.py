@@ -8,7 +8,10 @@ setup(
     version="1.0.0",
     author="Canonical webteam",
     author_email="webteam@canonical.com",
-    url="https://github.com/canonical-web-and-design/canonicalwebteam.image-template",
+    url=(
+        "https://github.com/canonical-web-and-design/"
+        "canonicalwebteam.image-template"
+    ),
     packages=["canonicalwebteam", "canonicalwebteam.image_template"],
     include_package_data=True,
     description=("Generate <img> markup block for an image."),
