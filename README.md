@@ -148,3 +148,26 @@ If `loading` is set to "lazy" (the default), the output markup will be wrapped i
   </noscript>
 </div>
 ```
+
+## VS Code Snippet
+
+To add the required markup for this template as a User Snippet, add the following as a HTML snippet (User Snippets under File > Preferences, or Code > Preferences on macOS):
+
+```
+"Image module": {
+	"prefix": "image-module",
+	"body": [
+		"{{",
+		"	image_template(",
+		"		url=\"$1\",",
+		"		alt=\"$2\",",
+		"		height=\"$3\",",
+		"		width=\"$4\",",
+		"		hi_def=$5True,",
+		"		attrs={\"class\": \"$6\"}",
+		"	) | safe",
+		"}}"
+	],
+	"description": "Image module include"
+}"
+```
