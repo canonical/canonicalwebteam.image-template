@@ -164,7 +164,8 @@ To add the required markup for this template as a User Snippet, add the followin
 		"		height=\"$3\",",
 		"		width=\"$4\",",
 		"		hi_def=$5True,",
-		"		attrs={\"class\": \"$6\"}",
+		"		loading=\"auto|lazy$6\",",
+		"		attrs={\"class\": \"$7\"}",
 		"	) | safe",
 		"}}"
 	],
