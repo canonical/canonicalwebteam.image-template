@@ -32,7 +32,7 @@ def image_template(
     # If the original image does not match the requested
     # ratio set crop and fill see
     # https://cloudinary.com/documentation/image_transformation_reference#crop_parameter
-    if fill == True:
+    if fill:
         cloudinary_options.append("c_fill")
 
     if not url_parts.netloc:

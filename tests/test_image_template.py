@@ -65,6 +65,19 @@ class TestImageTemplate(unittest.TestCase):
         # Check lazyload class is not present
         self.assertIn('class="test-title"', markup)
 
+    def test_optional_fill(self):
+        markup = image_template(
+            url=asset_url,
+            alt="test",
+            width="1920",
+            height="1080",
+            loading="auto",
+            fill=True,
+            hi_def=False,
+        )
+        # Check c_fill is present
+        self.assertIn("c_fill", markup)
+
     def test_hi_def(self):
         markup = image_template(
             url=non_asset_url,
