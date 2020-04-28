@@ -11,7 +11,9 @@ env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
 
 
-def image_template(url, alt, width, height, hi_def, loading="lazy", attrs={}):
+def image_template(
+    url, alt, width, height, hi_def, fill=False, loading="lazy", attrs={}
+):
     """
     Generate image markup
     """
@@ -26,6 +28,12 @@ def image_template(url, alt, width, height, hi_def, loading="lazy", attrs={}):
         "q_auto",  # Auto optimise quality
         "fl_sanitize",  # Sanitize SVG content
     ]
+
+    # If the original image does not match the requested
+    # ratio set crop and fill see
+    # https://cloudinary.com/documentation/image_transformation_reference#crop_parameter
+    if fill == True:
+        cloudinary_options.append("c_fill")
 
     if not url_parts.netloc:
         raise Exception("url must contain a hostname")

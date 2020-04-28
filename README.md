@@ -20,6 +20,7 @@ will:
 - `width` (mandatory integer): The number of pixels wide the image should be
 - `height` (mandatory integer): The number of pixels high the image should be
 - `hi_def` (mandatory boolean): Has an image been uploaded 2x the width and height of the desired size
+- `fill` (optional boolean): Set the crop mode to ["fill"](https://cloudinary.com/documentation/image_transformation_reference#crop_parameter)
 - `loading` (optional string, default: "lazy"): Set to ["auto" or "eager"](https://addyosmani.com/blog/lazy-loading/) to disable lazyloading
 - `attrs` (optional dictionary): Extra `<img>` attributes (e.g. `class` or `id`) can be passed as additional arguments
 
@@ -37,6 +38,7 @@ image_markup = image_template(
     height="319",
     hi_def=True,
     loading="auto",
+	fill=True,
     attrs={"class": "hero", "id": "openstack-hero"},
 )
 ```
@@ -84,7 +86,7 @@ Use it in templates:
 ``` html
 # templates/mytemplate.html
 
-{% image url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" alt="Operational dashboard" width="1040" height="585" hi_def=True %}
+{% image url="https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png" alt="Operational dashboard" width="1040" height="585" hi_def=True fill=True %}
 ```
 
 ### Flask usage
@@ -116,6 +118,7 @@ Use it in templates, e.g.::
     width="534",
     height="319",
     hi_def=True,
+	fill=True,
     loading="auto",
     attrs={"class": "hero", "id": "openstack-hero"},
   ) | safe
@@ -128,8 +131,8 @@ The output image markup will be e.g.:
 
 ``` html
 <img
-    src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_534,h_319/https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
-    srcset="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_1068,h_638/https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg 2x"
+    src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_534,h_319,c_fill/https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
+    srcset="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_1068,h_638,c_fill/https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg 2x"
     alt=""
     width="534"
     height="319"
