@@ -17,9 +17,9 @@ will:
 
 - `url` (mandatory string): The url to an image (e.g. `https://assets.ubuntu.com/v1/9f6916dd-k8s-prometheus-light.png`)
 - `alt` (mandatory string): Alt text to describe the image
-- `width` (mandatory integer): The number of pixels wide the image should be
-- `height` (mandatory integer): The number of pixels high the image should be
 - `hi_def` (mandatory boolean): Has an image been uploaded 2x the width and height of the desired size
+- `width` (mandatory integer): The number of pixels wide the image should be
+- `height` (optional integer): The number of pixels high the image should be
 - `fill` (optional boolean): Set the crop mode to ["fill"](https://cloudinary.com/documentation/image_transformation_reference#crop_parameter)
 - `loading` (optional string, default: "lazy"): Set to ["auto" or "eager"](https://addyosmani.com/blog/lazy-loading/) to disable lazyloading
 - `attrs` (optional dictionary): Extra `<img>` attributes (e.g. `class` or `id`) can be passed as additional arguments
