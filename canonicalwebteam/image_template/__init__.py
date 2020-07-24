@@ -12,7 +12,14 @@ template = env.get_template("image_template.html")
 
 
 def image_template(
-    url, alt, width, height, hi_def, fill=False, loading="lazy", attrs={}
+    url,
+    alt,
+    width,
+    hi_def,
+    height=None,
+    fill=False,
+    loading="lazy",
+    attrs={},
 ):
     """
     Generate image markup
@@ -42,11 +49,15 @@ def image_template(
     hi_def_cloudinary_options = cloudinary_options.copy()
 
     std_def_cloudinary_options.append("w_" + str(width))
-    std_def_cloudinary_options.append("h_" + str(height))
+
+    if height is not None:
+        std_def_cloudinary_options.append("h_" + str(height))
 
     if hi_def:
         hi_def_cloudinary_options.append("w_" + str(int(width) * 2))
-        hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
+
+        if height is not None:
+            hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
 
     return template.render(
         url=url,
@@ -54,7 +65,7 @@ def image_template(
         std_def_cloudinary_options=",".join(std_def_cloudinary_options),
         hi_def_cloudinary_options=",".join(hi_def_cloudinary_options),
         width=int(width),
-        height=int(height),
+        height=height,
         hi_def=hi_def,
         loading=loading,
         attrs=attrs,
