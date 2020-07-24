@@ -104,6 +104,14 @@ class TestImageTemplate(unittest.TestCase):
         self.assertTrue(markup_asset.find("x2"))
         self.assertTrue(markup_asset.find("w%3D3840%26h%3D2160"))
 
+    def test_height_is_optional(self):
+        image = image_template(
+            url=non_asset_url, alt="test", width="1920", hi_def=True,
+        )
+
+        self.assertNotIn("height=", image)
+        self.assertNotIn("h_auto", image)
+
 
 if __name__ == "__main__":
     unittest.main()
