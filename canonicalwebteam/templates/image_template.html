@@ -9,7 +9,9 @@
       {%- endif %}
       alt="{{ alt }}"
       width="{{ width }}"
+      {%- if height %}
       height="{{ height }}"
+      {%- endif %}
       loading="{{ loading }}"
       {%- for attr_name, attr_value in attrs.items() %}
       {{ attr_name }}="{{ attr_value }}"
