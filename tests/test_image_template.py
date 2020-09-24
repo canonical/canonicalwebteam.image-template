@@ -119,7 +119,10 @@ class TestImageTemplate(unittest.TestCase):
 
     def test_height_is_optional(self):
         image = image_template(
-            url=non_asset_url, alt="test", width="1920", hi_def=True,
+            url=non_asset_url,
+            alt="test",
+            width="1920",
+            hi_def=True,
         )
 
         self.assertNotIn("height=", image)

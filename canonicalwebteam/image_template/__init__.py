@@ -12,7 +12,14 @@ template = env.get_template("image_template.html")
 
 
 def image_template(
-    url, alt, hi_def, width, height=None, fill=False, loading="lazy", attrs={},
+    url,
+    alt,
+    hi_def,
+    width,
+    height=None,
+    fill=False,
+    loading="lazy",
+    attrs={},
 ):
     """
     Generate image markup
