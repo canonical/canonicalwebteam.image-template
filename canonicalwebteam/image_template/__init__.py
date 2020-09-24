@@ -27,6 +27,7 @@ def image_template(
         "f_auto",  # Auto choose format
         "q_auto",  # Auto optimise quality
         "fl_sanitize",  # Sanitize SVG content
+        "e_sharpen",  # Sharpen images
     ]
 
     # If the original image does not match the requested

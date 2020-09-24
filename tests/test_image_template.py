@@ -78,6 +78,19 @@ class TestImageTemplate(unittest.TestCase):
         # Check c_fill is present
         self.assertIn("c_fill", markup)
 
+    def test_e_sharpen(self):
+        markup = image_template(
+            url=asset_url,
+            alt="test",
+            width="1920",
+            height="1080",
+            loading="auto",
+            fill=True,
+            hi_def=False,
+        )
+        # Check e_sharpen is present
+        self.assertIn("e_sharpen", markup)
+
     def test_hi_def(self):
         markup = image_template(
             url=non_asset_url,
