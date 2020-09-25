@@ -12,7 +12,14 @@ template = env.get_template("image_template.html")
 
 
 def image_template(
-    url, alt, hi_def, width, height=None, fill=False, loading="lazy", attrs={},
+    url,
+    alt,
+    hi_def,
+    width,
+    height=None,
+    fill=False,
+    loading="lazy",
+    attrs={},
 ):
     """
     Generate image markup
@@ -27,6 +34,7 @@ def image_template(
         "f_auto",  # Auto choose format
         "q_auto",  # Auto optimise quality
         "fl_sanitize",  # Sanitize SVG content
+        "e_sharpen",  # Sharpen images
     ]
 
     # If the original image does not match the requested
