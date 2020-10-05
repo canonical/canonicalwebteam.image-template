@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="canonicalwebteam.image-template",
-    version="1.3.0",
+    version="1.3.1",
     author="Canonical webteam",
     author_email="webteam@canonical.com",
     url=(

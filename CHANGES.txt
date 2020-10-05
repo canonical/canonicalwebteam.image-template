@@ -1,3 +1,4 @@
+v1.3.1, 2020-09-24: Make e_sharpen optional
 v1.3.0, 2020-09-24: Add e_sharpen to images
 v1.2.0, 2020-07-24: Make height optional
 v1.1.0, 2020-04-28: Add `fill`.
