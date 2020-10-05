@@ -86,6 +86,7 @@ class TestImageTemplate(unittest.TestCase):
             height="1080",
             loading="auto",
             fill=True,
+            e_sharpen=True,
             hi_def=False,
         )
         # Check e_sharpen is present

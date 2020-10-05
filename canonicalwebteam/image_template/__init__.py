@@ -18,6 +18,7 @@ def image_template(
     width,
     height=None,
     fill=False,
+    e_sharpen=False,
     loading="lazy",
     attrs={},
 ):
@@ -34,8 +35,10 @@ def image_template(
         "f_auto",  # Auto choose format
         "q_auto",  # Auto optimise quality
         "fl_sanitize",  # Sanitize SVG content
-        "e_sharpen",  # Sharpen images
     ]
+
+    if e_sharpen:
+        cloudinary_options.append("e_sharpen")
 
     # If the original image does not match the requested
     # ratio set crop and fill see
