@@ -26,6 +26,12 @@ will:
 
 ## Usage
 
+### Local development
+
+For local development, it's best to test this module with one of our website projects like [ubuntu.com](https://github.com/canonical-web-and-design/ubuntu.com/). For more information, follow [this guide (internal only)](https://discourse.canonical.com/t/how-to-run-our-python-modules-for-local-development/308).
+
+### Application code
+
 The `image_template` function can be used directly to generate image Markup.
 
 ``` python3
