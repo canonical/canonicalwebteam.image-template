@@ -1,23 +1,15 @@
-{%- if loading == "lazy" %}
-<div class="lazyload" data-noscript>
-  <noscript>
-{%- endif %}
-    <img
-      src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
-      {%- if hi_def %}
-      srcset="https://res.cloudinary.com/canonical/image/fetch/{{ hi_def_cloudinary_options }}/{{ url }} 2x"
-      {%- endif %}
-      alt="{{ alt }}"
-      width="{{ width }}"
-      {%- if height %}
-      height="{{ height }}"
-      {%- endif %}
-      loading="{{ loading }}"
-      {%- for attr_name, attr_value in attrs.items() %}
-      {{ attr_name }}="{{ attr_value }}"
-      {%- endfor %}
-    />
-{%- if loading == "lazy" %}
-  </noscript>
-</div>
-{% endif %}
+<img
+  src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
+  {%- if hi_def %}
+  srcset="https://res.cloudinary.com/canonical/image/fetch/{{ hi_def_cloudinary_options }}/{{ url }} 2x"
+  {%- endif %}
+  alt="{{ alt }}"
+  width="{{ width }}"
+  {%- if height %}
+  height="{{ height }}"
+  {%- endif %}
+  loading="{{ loading }}"
+  {%- for attr_name, attr_value in attrs.items() %}
+  {{ attr_name }}="{{ attr_value }}"
+  {%- endfor %}
+/>
