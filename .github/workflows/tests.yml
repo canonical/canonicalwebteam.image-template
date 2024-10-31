@@ -30,7 +30,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update && sudo apt install -y --no-install-recommends python3-setuptools
-        pip3 install --upgrade setuptools
+        pip3 install --upgrade setuptools==71.0.0
         pip3 install flake8 black
 
     - name: Lint Python
@@ -45,12 +45,12 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update && sudo apt install -y --no-install-recommends python3-setuptools
-        pip3 install --upgrade setuptools
+        pip3 install --upgrade setuptools==71.0.0
         pip3 install coverage
 
     - name: Test Python
       run: python3 -m coverage run ./setup.py test
-      
+
   check-inclusive-naming:
     runs-on: ubuntu-latest
 
