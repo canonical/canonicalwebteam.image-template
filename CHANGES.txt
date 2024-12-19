@@ -1,3 +1,4 @@
+v1.4.1, 2024-10-30: Switch to using native lazyloading only (without lazysizes wrapping div)
 v1.3.1, 2020-09-24: Make e_sharpen optional
 v1.3.0, 2020-09-24: Add e_sharpen to images
 v1.2.0, 2020-07-24: Make height optional

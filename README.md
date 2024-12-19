@@ -7,8 +7,7 @@
 A module to generate performant HTML image markup for images. The markup
 will:
 
-- Use [native lazyloading](https://addyosmani.com/blog/lazy-loading/) if it's available
-- Output markup compatible with [lazysizes `noscript` plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/noscript)
+- Use [native lazyloading](https://addyosmani.com/blog/lazy-loading/)
 - Explicitly define `width` and `height` attributes to avoid the page jumping effect
 - Prefix all image URLs with cloudinary CDN proxy URLs, to transform the image to the optimal size
 - Use predefined (2x) `srcset` break points for hidef screens
@@ -50,18 +49,6 @@ image_markup = image_template(
 ```
 
 However, the most common usage is to add it to Django or Flask template contexts, as an `image` function.
-
-### Add lazysizes
-
-At the time of writing, the `loading` attribute [is only natively supported](https://caniuse.com/#search=loading) in Chrome. Therefore we use [lazysizes](https://github.com/aFarkas/lazysizes) to enable loading in other browsers while still taking advantage of the native functionality when it's available.
-
-If `loading` is set to "lazy" (the default) we will output [the Markup](#generated-markup) in a format supported by [lazysizes](https://github.com/aFarkas/lazysizes), with the [`noscript`](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/noscript) and [`native-loading`](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/native-loading) plugins enabled.
-
-To support this in your site you need to add the following script to the `<head>` of each page, *above* any `<link>` attributes:
-
-``` html
-<script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer></script>
-```
 
 ### Django usage
 
@@ -146,16 +133,6 @@ The output image markup will be e.g.:
     class="hero"
     id="openstack hero"
 />
-```
-
-If `loading` is set to "lazy" (the default), the output markup will be wrapped in markup for lazysizes support:
-
-``` html
-<div class="lazyload" data-noscript>
-  <noscript>
-    <img ...>
-  </noscript>
-</div>
 ```
 
 ## VS Code Snippet
