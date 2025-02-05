@@ -20,6 +20,7 @@ def image_template(
     fill=False,
     e_sharpen=False,
     loading="lazy",
+    fmt="auto",
     attrs={},
 ):
     """
@@ -32,7 +33,7 @@ def image_template(
     # https://cloudinary.com/documentation/image_transformations
 
     cloudinary_options = [
-        "f_auto",  # Auto choose format
+        "f_" + str(fmt),
         "q_auto",  # Auto optimise quality
         "fl_sanitize",  # Sanitize SVG content
     ]
