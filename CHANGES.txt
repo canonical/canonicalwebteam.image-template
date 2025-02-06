@@ -1,3 +1,4 @@
+v1.5.0, 2025-02-05: Add optional 'fmt' parameter for defining the format
 v1.4.2, 2024-12-19: Add 'c_limit' to hi-def cloudinary urls
 v1.4.1, 2024-10-30: Switch to using native lazyloading only (without lazysizes wrapping div)
 v1.3.1, 2020-09-24: Make e_sharpen optional
