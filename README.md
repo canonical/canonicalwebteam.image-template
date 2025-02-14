@@ -21,6 +21,7 @@ will:
 - `height` (optional integer): The number of pixels high the image should be
 - `fill` (optional boolean): Set the crop mode to ["fill"](https://cloudinary.com/documentation/image_transformation_reference#crop_parameter)
 - `loading` (optional string, default: "lazy"): Set to ["auto" or "eager"](https://addyosmani.com/blog/lazy-loading/) to disable lazyloading
+- - `fmt` (optional string, default :"auto"): Change the format of the image (e.g. `fmt="jpg"` for jpeg)
 - `attrs` (optional dictionary): Extra `<img>` attributes (e.g. `class` or `id`) can be passed as additional arguments
 
 ## Usage
@@ -43,7 +44,8 @@ image_markup = image_template(
     height="319",
     hi_def=True,
     loading="auto",
-	fill=True,
+    fmt="auto",
+    fill=True,
     attrs={"class": "hero", "id": "openstack-hero"},
 )
 ```
@@ -111,7 +113,7 @@ Use it in templates, e.g.::
     width="534",
     height="319",
     hi_def=True,
-	fill=True,
+    fill=True,
     loading="auto",
     attrs={"class": "hero", "id": "openstack-hero"},
   ) | safe
