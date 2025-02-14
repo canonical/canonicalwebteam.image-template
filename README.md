@@ -21,6 +21,7 @@ will:
 - `height` (optional integer): The number of pixels high the image should be
 - `fill` (optional boolean): Set the crop mode to ["fill"](https://cloudinary.com/documentation/image_transformation_reference#crop_parameter)
 - `loading` (optional string, default: "lazy"): Set to ["auto" or "eager"](https://addyosmani.com/blog/lazy-loading/) to disable lazyloading
+- `fmt` (optional string, default: "auto"): Define the file format (e.g. `fmt="jpg"`)
 - `attrs` (optional dictionary): Extra `<img>` attributes (e.g. `class` or `id`) can be passed as additional arguments
 
 ## Usage
