@@ -1,7 +1,7 @@
 <img
-  src="https://res.cloudinary.com/canonical/image/fetch/{{ std_def_cloudinary_options }}/{{ url }}"
+  src="{{ src }}"
   {%- if hi_def %}
-  srcset="https://res.cloudinary.com/canonical/image/fetch/c_limit,{{ hi_def_cloudinary_options }}/{{ url }} 2x"
+  srcset="{{ srcset }}"
   {%- endif %}
   alt="{{ alt }}"
   width="{{ width }}"

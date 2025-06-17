@@ -15,6 +15,7 @@ non_asset_url = (
     "2018/10/Screenshot_from_2018-10-26_14-20-14.png"
 )
 non_hostname_url = "/static/images/Screenshot_from_2018-10-26_14-20-14.png"
+cloudinary_url_base = "https://res.cloudinary.com/canonical/image/fetch"
 
 
 class TestImageTemplate(unittest.TestCase):
@@ -128,6 +129,35 @@ class TestImageTemplate(unittest.TestCase):
 
         self.assertNotIn("height=", image)
         self.assertNotIn("h_auto", image)
+
+    def test_attrs_return(self):
+        image_attrs = {
+            "url": asset_url,
+            "alt": "test",
+            "width": 1920,
+            "height": 1080,
+            "loading": "lazy",
+            "hi_def": True,
+            "attrs": {},
+        }
+
+        expected_attrs = image_attrs.copy()
+        returned_attrs = image_template(**image_attrs, output_mode="attrs")
+
+        # consumed by src and srcset
+        del expected_attrs["url"]
+
+        expected_attrs["src"] = (
+            f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920,h_1080"
+            f"/{asset_url}"
+        )
+
+        expected_attrs["srcset"] = (
+            f"{cloudinary_url_base}/c_limit,f_auto,q_auto,fl_sanitize,"
+            f"w_3840,h_2160/{asset_url} 2x"
+        )
+
+        self.assertEqual(expected_attrs, returned_attrs)
 
 
 if __name__ == "__main__":

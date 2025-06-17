@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 parent_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 env = Environment(loader=FileSystemLoader(parent_dir + "/templates"))
 template = env.get_template("image_template.html")
+cloudinary_url_base = "https://res.cloudinary.com/canonical/image/fetch"
 
 
 def image_template(
@@ -22,6 +23,7 @@ def image_template(
     loading="lazy",
     fmt="auto",
     attrs={},
+    output_mode="html",
 ):
     """
     Generate image markup
@@ -64,17 +66,34 @@ def image_template(
         if height is not None:
             hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
 
-    return template.render(
-        url=url,
-        alt=alt,
-        std_def_cloudinary_options=",".join(std_def_cloudinary_options),
-        hi_def_cloudinary_options=",".join(hi_def_cloudinary_options),
-        width=int(width),
-        height=height,
-        hi_def=hi_def,
-        loading=loading,
-        attrs=attrs,
+    std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
+    hi_def_cloudinary_attrs = ",".join(hi_def_cloudinary_options)
+    image_src = f"{cloudinary_url_base}/{std_def_cloudinary_attrs}/{url}"
+
+    image_srcset = (
+        f"{cloudinary_url_base}/c_limit," f"{hi_def_cloudinary_attrs}/{url} 2x"
     )
+
+    image_attrs = {
+        "src": image_src,
+        "srcset": image_srcset,
+        "alt": alt,
+        "width": int(width),
+        "height": height,
+        "hi_def": hi_def,
+        "loading": loading,
+        "attrs": attrs,
+    }
+
+    if not hi_def:
+        del image_attrs["srcset"]
+
+    if output_mode == "html":
+        return template.render(**image_attrs)
+    elif output_mode == "attrs":
+        return image_attrs
+    else:
+        raise ValueError("output_mode must be 'html' or 'attrs'")
 
 
 sys.modules[__name__] = image_template
