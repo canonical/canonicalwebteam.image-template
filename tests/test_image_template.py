@@ -146,6 +146,8 @@ class TestImageTemplate(unittest.TestCase):
 
         # consumed by src and srcset
         del expected_attrs["url"]
+        # spread onto the rest of the attributes
+        del expected_attrs["attrs"]
 
         expected_attrs["src"] = (
             f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920,h_1080"

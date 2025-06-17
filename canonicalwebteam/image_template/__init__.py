@@ -91,7 +91,9 @@ def image_template(
     if output_mode == "html":
         return template.render(**image_attrs)
     elif output_mode == "attrs":
-        return image_attrs
+        merged_attrs = {**image_attrs, **attrs}
+        del merged_attrs["attrs"]
+        return merged_attrs
     else:
         raise ValueError("output_mode must be 'html' or 'attrs'")
 
