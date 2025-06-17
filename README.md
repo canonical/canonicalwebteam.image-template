@@ -23,7 +23,7 @@ will:
 - `loading` (optional string, default: "lazy"): Set to ["auto" or "eager"](https://addyosmani.com/blog/lazy-loading/) to disable lazyloading
 - `fmt` (optional string, default: "auto"): Define the file format (e.g. `fmt="jpg"`)
 - `attrs` (optional dictionary): Extra `<img>` attributes (e.g. `class` or `id`) can be passed as additional arguments
-- `output_mode` (optional string, default: "html"): The output mode can be set to either `html` or `attrs`. If set to `atrrs`, the function will return an object with the image attributes instead of HTML markup.
+- `output_mode` (optional string, default: "html"): The output mode can be set to either `html` or `attrs`. If set to `attrs`, the function will return an object with the image attributes instead of HTML markup.
 
 ## Usage
 
