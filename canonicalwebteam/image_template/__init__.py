@@ -15,7 +15,6 @@ cloudinary_url_base = "https://res.cloudinary.com/canonical/image/fetch"
 def image_template(
     url,
     alt,
-    hi_def,
     width,
     height=None,
     fill=False,
@@ -24,6 +23,9 @@ def image_template(
     fmt="auto",
     attrs={},
     output_mode="html",
+    sizes="(min-width: {}px) {}px, 100vw",
+    # Deprecated
+    hi_def=False,
 ):
     """
     Generate image markup
@@ -53,50 +55,50 @@ def image_template(
         raise Exception("url must contain a hostname")
 
     std_def_cloudinary_options = cloudinary_options.copy()
-    hi_def_cloudinary_options = cloudinary_options.copy()
 
     std_def_cloudinary_options.append("w_" + str(width))
 
     if height is not None:
         std_def_cloudinary_options.append("h_" + str(height))
 
-    if hi_def:
-        hi_def_cloudinary_options.append("w_" + str(int(width) * 2))
-
-        if height is not None:
-            hi_def_cloudinary_options.append("h_" + str(int(height) * 2))
-
     std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
-    hi_def_cloudinary_attrs = ",".join(hi_def_cloudinary_options)
+    image_src = f"{cloudinary_url_base}/{std_def_cloudinary_attrs}/{url}"
 
-    # Decode the URL first to prevent double encoding
-    decoded_url = unquote(url)
-    encoded_url = quote(decoded_url, safe="")
+    # Generate srcset values
+    # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset
+    srcset_widths = [
+        320,
+        480,
+        640,
+        800,
+        1024,
+        1280,
+        1600,
+        1920,
+        2560,
+    ]
+    srcset = []
+    for srcset_width in srcset_widths:
+        if srcset_width <= int(width):
+            srcset_options = cloudinary_options.copy()
+            srcset_options.append("w_" + str(srcset_width))
+            srcset_attrs = ",".join(srcset_options)
+            srcset.append(
+                f"{cloudinary_url_base}/{srcset_attrs}/{url} {srcset_width}w"
+            )
 
-    image_src = (
-        f"{cloudinary_url_base}/"
-        f"{std_def_cloudinary_attrs}/"
-        f"{encoded_url}"
-    )
-
-    image_srcset = (
-        f"{cloudinary_url_base}/c_limit,"
-        f"{hi_def_cloudinary_attrs}/{encoded_url} 2x"
-    )
+    image_srcset = ", ".join(srcset)
 
     image_attrs = {
         "src": image_src,
         "srcset": image_srcset,
+        "sizes": sizes.format(width, width),
         "alt": alt,
         "width": int(width),
         "height": height,
-        "hi_def": hi_def,
         "loading": loading,
         "attrs": attrs,
     }
-
-    if not hi_def:
-        del image_attrs["srcset"]
 
     if output_mode == "html":
         return template.render(**image_attrs)
