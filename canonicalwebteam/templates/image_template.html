@@ -1,7 +1,10 @@
 <img
   src="{{ src }}"
-  {%- if hi_def %}
+  {%- if srcset %}
   srcset="{{ srcset }}"
+  {%- endif %}
+  {%- if sizes %}
+  sizes="{{ sizes }}"
   {%- endif %}
   alt="{{ alt }}"
   width="{{ width }}"

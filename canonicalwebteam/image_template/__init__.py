@@ -58,24 +58,17 @@ def image_template(
 
     std_def_cloudinary_options.append("w_" + str(width))
 
-    if height is not None:
-        std_def_cloudinary_options.append("h_" + str(height))
-
     std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
     image_src = f"{cloudinary_url_base}/{std_def_cloudinary_attrs}/{url}"
 
     # Generate srcset values
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset
+    # also based on Vanilla breakpoints. https://vanillaframework.io/docs/settings/breakpoint-settings
     srcset_widths = [
-        320,
-        480,
-        640,
-        800,
-        1024,
-        1280,
-        1600,
-        1920,
-        2560,
+        460,
+        620,
+        1036,
+        1681
     ]
     srcset = []
     for srcset_width in srcset_widths:
@@ -89,16 +82,25 @@ def image_template(
 
     image_srcset = ", ".join(srcset)
 
+    try:
+        sizes_attr = sizes.format(width, width)
+    except (IndexError, KeyError):
+        sizes_attr = sizes
+
     image_attrs = {
         "src": image_src,
         "srcset": image_srcset,
-        "sizes": sizes.format(width, width),
+        "sizes": sizes_attr,
         "alt": alt,
         "width": int(width),
         "height": height,
         "loading": loading,
         "attrs": attrs,
     }
+
+    if not image_srcset:
+        del image_attrs["srcset"]
+        del image_attrs["sizes"]
 
     if output_mode == "html":
         return template.render(**image_attrs)

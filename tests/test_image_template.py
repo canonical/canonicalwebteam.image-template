@@ -20,11 +20,7 @@ cloudinary_url_base = "https://res.cloudinary.com/canonical/image/fetch"
 class TestImageTemplate(unittest.TestCase):
     def test_returns_string(self):
         markup = image_template(
-            url=asset_url,
-            alt="test",
-            width="1920",
-            height="1080",
-            hi_def=False,
+            url=asset_url, alt="test", width="1920", height="1080"
         )
         self.assertTrue(isinstance(markup, str))
 
@@ -34,7 +30,6 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1920",
             height="1080",
-            hi_def=False,
             attrs={"id": "test", "title": "test title"},
         )
         self.assertIn('id="test"', markup)
@@ -46,7 +41,6 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1920",
             height="1080",
-            hi_def=False,
             attrs={"class": "test-title"},
         )
         # Check custom class exists
@@ -60,7 +54,6 @@ class TestImageTemplate(unittest.TestCase):
             height="1080",
             loading="auto",
             attrs={"class": "test-title"},
-            hi_def=False,
         )
         # Check lazyload class is not present
         self.assertIn('class="test-title"', markup)
@@ -73,7 +66,6 @@ class TestImageTemplate(unittest.TestCase):
             height="1080",
             loading="auto",
             fill=True,
-            hi_def=False,
         )
         # Check c_fill is present
         self.assertIn("c_fill", markup)
@@ -87,47 +79,46 @@ class TestImageTemplate(unittest.TestCase):
             loading="auto",
             fill=True,
             e_sharpen=True,
-            hi_def=False,
         )
         # Check e_sharpen is present
         self.assertIn("e_sharpen", markup)
 
-    def test_hi_def(self):
+    def test_srcset(self):
         markup = image_template(
-            url=non_asset_url,
-            alt="test",
-            width="1920",
-            height="1080",
-            hi_def=True,
-        )
-        markup_asset = image_template(
-            url=asset_url, alt="test", width="1920", height="1080", hi_def=True
+            url=non_asset_url, alt="test", width="1080", height="1080"
         )
 
         # Check the markup includes srcset
-        self.assertTrue(markup.find("srcset="))
-        self.assertTrue(markup.find("data-srcset"))
-        # Check x2 is present
-        self.assertTrue(markup.find("x2"))
-        # Check width and height are double
-        self.assertTrue(markup.find("3840"))
-        self.assertTrue(markup.find("2160"))
+        self.assertIn("srcset=", markup)
+        self.assertIn("460w", markup)
+        self.assertIn("620w", markup)
+        self.assertNotIn("1681w", markup)
 
-        self.assertTrue(markup_asset.find("srcset="))
-        self.assertTrue(markup_asset.find("data-srcset"))
-        self.assertTrue(markup_asset.find("x2"))
-        self.assertTrue(markup_asset.find("w%3D3840%26h%3D2160"))
+    def test_sizes(self):
+        markup = image_template(
+            url=non_asset_url, alt="test", width="540",
+        )
+
+        # Check the markup includes sizes
+        self.assertIn('sizes="(min-width: 540px) 540px, 100vw"', markup)
+
+    def test_no_srcset_for_small_images(self):
+        markup = image_template(
+            url=non_asset_url, alt="test", width="30"
+        )
+
+        self.assertNotIn("srcset=", markup)
+        self.assertNotIn("sizes=", markup)
 
     def test_height_is_optional(self):
         image = image_template(
             url=non_asset_url,
             alt="test",
             width="1920",
-            hi_def=True,
         )
 
         self.assertNotIn("height=", image)
-        self.assertNotIn("h_auto", image)
+        self.assertNotIn("h_1080", image)
 
     def test_attrs_return(self):
         image_attrs = {
@@ -136,29 +127,41 @@ class TestImageTemplate(unittest.TestCase):
             "width": 1920,
             "height": 1080,
             "loading": "lazy",
-            "hi_def": True,
             "attrs": {},
         }
 
-        decoded_asset_url = unquote(asset_url)
-        encoded_asset_url = quote(decoded_asset_url, safe="")
-
-        expected_attrs = image_attrs.copy()
         returned_attrs = image_template(**image_attrs, output_mode="attrs")
 
-        # consumed by src and srcset
+        expected_attrs = image_attrs.copy()
         del expected_attrs["url"]
-        # spread onto the rest of the attributes
         del expected_attrs["attrs"]
 
         expected_attrs["src"] = (
-            f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920,h_1080"
-            f"/{encoded_asset_url}"
+            f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920"
+            f"/{asset_url}"
         )
 
-        expected_attrs["srcset"] = (
-            f"{cloudinary_url_base}/c_limit,f_auto,q_auto,fl_sanitize,"
-            f"w_3840,h_2160/{encoded_asset_url} 2x"
+        srcset_widths = [
+            460,
+            620,
+            1036,
+            1681
+        ]
+        srcset = []
+        for srcset_width in srcset_widths:
+            if srcset_width <= image_attrs["width"]:
+                srcset.append(
+                    f"{cloudinary_url_base}/"
+                    f"f_auto,q_auto,fl_sanitize,w_{srcset_width}/"
+                    f"{asset_url} {srcset_width}w"
+                )
+        expected_attrs["srcset"] = ", ".join(srcset)
+
+        expected_attrs[
+            "sizes"
+        ] = (
+            f"(min-width: {image_attrs['width']}px) "
+            f"{image_attrs['width']}px, 100vw"
         )
 
         self.assertEqual(expected_attrs, returned_attrs)
