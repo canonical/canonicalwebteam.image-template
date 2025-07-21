@@ -24,18 +24,32 @@ def image_template(
     attrs={},
     output_mode="html",
     sizes="(min-width: {}px) {}px, 100vw",
-    # Deprecated
+    srcset_widths=None,
     hi_def=False,
 ):
     """
-    Generate image markup
+    Generate responsive image markup with optimized srcset and sizes.
+    
+    Args:
+        url: Image URL
+        alt: Alt text for accessibility
+        width: Primary image width
+        height: Image height (optional)
+        fill: Whether to crop and fill to exact dimensions
+        e_sharpen: Whether to apply sharpening
+        loading: Loading strategy ('lazy', 'eager', 'auto')
+        fmt: Image format ('auto', 'webp', 'jpg', etc.)
+        attrs: Additional HTML attributes
+        output_mode: 'html' or 'attrs'
+        sizes: Responsive sizes attribute template
+        srcset_widths: Custom widths for srcset generation
+        hi_def: Enable high-DPI support (includes up to 2x image widths)
     """
 
     url_parts = urlparse(url)
 
     # Default cloudinary optimisations
     # https://cloudinary.com/documentation/image_transformations
-
     cloudinary_options = [
         "f_" + str(fmt),
         "q_auto",  # Auto optimise quality
@@ -55,29 +69,42 @@ def image_template(
         raise Exception("url must contain a hostname")
 
     std_def_cloudinary_options = cloudinary_options.copy()
-
     std_def_cloudinary_options.append("w_" + str(width))
-
     std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
     image_src = f"{cloudinary_url_base}/{std_def_cloudinary_attrs}/{url}"
 
-    # Generate srcset values
+    # Generate srcset values with improved logic
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset
-    # also based on Vanilla breakpoints. https://vanillaframework.io/docs/settings/breakpoint-settings
-    srcset_widths = [
-        460,
-        620,
-        1036,
-        1681
-    ]
+    # Based on Vanilla breakpoints and common device densities
+    if srcset_widths is None:
+        srcset_widths = [460, 620, 1036, 1681, 2400]
+    
+    width_int = int(width)
     srcset = []
-    for srcset_width in srcset_widths:
-        if srcset_width <= int(width):
+    
+    # Only generate srcset for images larger than 100px to avoid unnecessary overhead
+    if width_int > 100:
+        # Determine maximum width multiplier based on hi_def setting
+        max_width_multiplier = 2 if hi_def else 1
+        
+        # Include widths that make sense for responsive design
+        for srcset_width in srcset_widths:
+            # Include smaller widths for mobile/tablet and larger for high-DPI (if enabled)
+            if srcset_width <= width_int * max_width_multiplier:
+                srcset_options = cloudinary_options.copy()
+                srcset_options.append("w_" + str(srcset_width))
+                srcset_attrs = ",".join(srcset_options)
+                srcset.append(
+                    f"{cloudinary_url_base}/{srcset_attrs}/{url} {srcset_width}w"
+                )
+        
+        # Always include the original width if not already present
+        if width_int not in [int(w) for w in srcset_widths if w <= width_int * max_width_multiplier]:
             srcset_options = cloudinary_options.copy()
-            srcset_options.append("w_" + str(srcset_width))
+            srcset_options.append("w_" + str(width_int))
             srcset_attrs = ",".join(srcset_options)
             srcset.append(
-                f"{cloudinary_url_base}/{srcset_attrs}/{url} {srcset_width}w"
+                f"{cloudinary_url_base}/{srcset_attrs}/{url} {width_int}w"
             )
 
     image_srcset = ", ".join(srcset)
