@@ -1,7 +1,7 @@
 # Standard library
 import os
 import sys
-from urllib.parse import urlparse
+from urllib.parse import quote, unquote, urlparse
 
 # Packages
 from jinja2 import Environment, FileSystemLoader
@@ -68,10 +68,20 @@ def image_template(
 
     std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
     hi_def_cloudinary_attrs = ",".join(hi_def_cloudinary_options)
-    image_src = f"{cloudinary_url_base}/{std_def_cloudinary_attrs}/{url}"
+
+    # Decode the URL first to prevent double encoding
+    decoded_url = unquote(url)
+    encoded_url = quote(decoded_url, safe="")
+
+    image_src = (
+        f"{cloudinary_url_base}/"
+        f"{std_def_cloudinary_attrs}/"
+        f"{encoded_url}"
+    )
 
     image_srcset = (
-        f"{cloudinary_url_base}/c_limit," f"{hi_def_cloudinary_attrs}/{url} 2x"
+        f"{cloudinary_url_base}/c_limit,"
+        f"{hi_def_cloudinary_attrs}/{encoded_url} 2x"
     )
 
     image_attrs = {
