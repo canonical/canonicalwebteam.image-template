@@ -141,7 +141,7 @@ class TestImageTemplate(unittest.TestCase):
         }
 
         decoded_asset_url = unquote(asset_url)
-        encoded_asset_url = quote(decoded_asset_url, safe='')
+        encoded_asset_url = quote(decoded_asset_url, safe="")
 
         expected_attrs = image_attrs.copy()
         returned_attrs = image_template(**image_attrs, output_mode="attrs")
