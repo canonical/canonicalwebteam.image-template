@@ -3,13 +3,12 @@ import unittest
 
 # Local
 from canonicalwebteam import image_template
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 
 asset_url = (
     "https://assets.ubuntu.com/" "v1/479958ed-vivid-hero-takeover-kylin.jpg"
 )
-encoded_asset_url = quote(asset_url)
 non_asset_url = (
     "https://dashboard.snapcraft.io/site_media/appmedia/"
     "2018/10/Screenshot_from_2018-10-26_14-20-14.png"
@@ -141,6 +140,9 @@ class TestImageTemplate(unittest.TestCase):
             "attrs": {},
         }
 
+        decoded_asset_url = unquote(asset_url)
+        encoded_asset_url = quote(decoded_asset_url, safe="")
+
         expected_attrs = image_attrs.copy()
         returned_attrs = image_template(**image_attrs, output_mode="attrs")
 
@@ -151,12 +153,12 @@ class TestImageTemplate(unittest.TestCase):
 
         expected_attrs["src"] = (
             f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920,h_1080"
-            f"/{asset_url}"
+            f"/{encoded_asset_url}"
         )
 
         expected_attrs["srcset"] = (
             f"{cloudinary_url_base}/c_limit,f_auto,q_auto,fl_sanitize,"
-            f"w_3840,h_2160/{asset_url} 2x"
+            f"w_3840,h_2160/{encoded_asset_url} 2x"
         )
 
         self.assertEqual(expected_attrs, returned_attrs)
