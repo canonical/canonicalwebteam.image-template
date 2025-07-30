@@ -43,7 +43,7 @@ def image_template(
         output_mode: 'html' or 'attrs'
         sizes: Responsive sizes attribute template
         srcset_widths: Custom widths for srcset generation
-        hi_def: Enable high-DPI support (includes up to 2x image widths)
+        hi_def: Enable conservative high-DPI support (up to 1.25x, capped at 1600px)
     """
 
     url_parts = urlparse(url)
@@ -73,24 +73,35 @@ def image_template(
     std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
     image_src = f"{cloudinary_url_base}/{std_def_cloudinary_attrs}/{url}"
 
-    # Generate srcset values with improved logic
+    # Generate srcset values with optimized logic for real-world usage
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset
-    # Based on Vanilla breakpoints and common device densities
+    # Optimized for container max-width of 1386px on 2560px displays
+    # Most images are 50% or 100% of container, so max effective size is ~1386px
+    # Conservative approach to minimize payload while maintaining quality
     if srcset_widths is None:
-        srcset_widths = [460, 620, 1036, 1681, 2400]
+        # Focused on actual breakpoints: mobile, tablet, desktop
+        # Removed unnecessary large sizes that increase payload
+        srcset_widths = [320, 480, 768, 1024]
     
     width_int = int(width)
     srcset = []
     
     # Only generate srcset for images larger than 100px to avoid unnecessary overhead
     if width_int > 100:
-        # Determine maximum width multiplier based on hi_def setting
-        max_width_multiplier = 2 if hi_def else 1
+        # Conservative approach: limit srcset to practical sizes
+        # For most use cases, going beyond 1386px is unnecessary
+        max_practical_width = min(width_int, 1386)
+        
+        # When hi_def is enabled, allow slightly larger for high-DPI
+        # But cap at 1.25x to avoid excessive payload
+        if hi_def:
+            max_width_limit = min(width_int * 1.25, 1600)  # Conservative 1.25x, capped at 1600px
+        else:
+            max_width_limit = max_practical_width
         
         # Include widths that make sense for responsive design
         for srcset_width in srcset_widths:
-            # Include smaller widths for mobile/tablet and larger for high-DPI (if enabled)
-            if srcset_width <= width_int * max_width_multiplier:
+            if srcset_width <= max_width_limit:
                 srcset_options = cloudinary_options.copy()
                 srcset_options.append("w_" + str(srcset_width))
                 srcset_attrs = ",".join(srcset_options)
@@ -98,8 +109,10 @@ def image_template(
                     f"{cloudinary_url_base}/{srcset_attrs}/{url} {srcset_width}w"
                 )
         
-        # Always include the original width if not already present
-        if width_int not in [int(w) for w in srcset_widths if w <= width_int * max_width_multiplier]:
+        # Include the original width only if it's within practical limits
+        # and not already present in srcset
+        if (width_int <= max_width_limit and 
+            width_int not in [int(w) for w in srcset_widths if w <= max_width_limit]):
             srcset_options = cloudinary_options.copy()
             srcset_options.append("w_" + str(width_int))
             srcset_attrs = ",".join(srcset_options)

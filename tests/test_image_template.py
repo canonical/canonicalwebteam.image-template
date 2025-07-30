@@ -90,24 +90,25 @@ class TestImageTemplate(unittest.TestCase):
 
         # Check the markup includes srcset (without hi_def, only up to original width)
         self.assertIn("srcset=", markup)
-        self.assertIn("460w", markup)
-        self.assertIn("620w", markup)
-        self.assertIn("1036w", markup)
-        self.assertNotIn("1681w", markup)  # Should not include (exceeds 1x without hi_def)
-        self.assertNotIn("2400w", markup)  # Should not include (exceeds 1x without hi_def)
+        self.assertIn("320w", markup)
+        self.assertIn("480w", markup)
+        self.assertIn("768w", markup)
+        self.assertIn("1024w", markup)
+        self.assertNotIn("1386w", markup)  # Should not include (exceeds 1x without hi_def)
 
     def test_srcset_with_hi_def(self):
         markup = image_template(
             url=non_asset_url, alt="test", width="1080", height="1080", hi_def=True
         )
 
-        # Check the markup includes srcset with hi_def (up to 2x)
+        # Check the markup includes srcset with hi_def (up to 1.25x, capped at 1600px)
+        # For 1080px image: 1080 * 1.25 = 1350px max
         self.assertIn("srcset=", markup)
-        self.assertIn("460w", markup)
-        self.assertIn("620w", markup)
-        self.assertIn("1036w", markup)
-        self.assertIn("1681w", markup)  # Now included with hi_def=True (within 2x)
-        self.assertNotIn("2400w", markup)  # Should not include (exceeds 2x)
+        self.assertIn("320w", markup)
+        self.assertIn("480w", markup)
+        self.assertIn("768w", markup)
+        self.assertIn("1024w", markup)
+        self.assertIn("1080w", markup)  # Original width included
 
     def test_sizes(self):
         markup = image_template(
@@ -124,17 +125,17 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1000",
             srcset_widths=custom_widths,
-            hi_def=True  # Enable hi_def to include 1280w (which is > 1000px)
+            hi_def=True  # Enable hi_def but 1280w won't be included (1000 * 1.25 = 1250 < 1280)
         )
 
-        # Check the markup includes custom srcset widths
+        # Check the markup includes custom srcset widths within limits
         self.assertIn("srcset=", markup)
         self.assertIn("320w", markup)
         self.assertIn("640w", markup)
-        self.assertIn("1280w", markup)  # Now included with hi_def=True
-        # Should not include default widths
-        self.assertNotIn("460w", markup)
-        self.assertNotIn("620w", markup)
+        self.assertNotIn("1280w", markup)  # Not included (exceeds 1.25x limit for 1000px image)
+        # Should not include default widths that aren't in custom list
+        self.assertNotIn("480w", markup)
+        self.assertNotIn("768w", markup)
 
     def test_custom_srcset_widths_without_hi_def(self):
         custom_widths = [320, 640, 1280]
@@ -151,9 +152,9 @@ class TestImageTemplate(unittest.TestCase):
         self.assertIn("320w", markup)
         self.assertIn("640w", markup)
         self.assertNotIn("1280w", markup)  # Should not include (exceeds 1x without hi_def)
-        # Should not include default widths
-        self.assertNotIn("460w", markup)
-        self.assertNotIn("620w", markup)
+        # Should not include default widths that aren't in custom list
+        self.assertNotIn("480w", markup)
+        self.assertNotIn("768w", markup)
 
     def test_no_srcset_for_small_images(self):
         # Test with image smaller than 100px threshold
@@ -204,21 +205,22 @@ class TestImageTemplate(unittest.TestCase):
             f"/{asset_url}"
         )
 
-        srcset_widths = [460, 620, 1036, 1681, 2400]
+        srcset_widths = [320, 480, 768, 1024]
         srcset = []
         width = image_attrs["width"]
         
-        # Generate expected srcset based on improved logic (without hi_def, only up to 1x)
+        # Generate expected srcset based on improved logic (without hi_def, capped at 1386px)
+        max_width_limit = min(width, 1386)  # Conservative cap at 1386px
         for srcset_width in srcset_widths:
-            if srcset_width <= width:  # Only up to 1x without hi_def
+            if srcset_width <= max_width_limit:
                 srcset.append(
                     f"{cloudinary_url_base}/"
                     f"f_auto,q_auto,fl_sanitize,w_{srcset_width}/"
                     f"{asset_url} {srcset_width}w"
                 )
         
-        # Include original width if not already present
-        if width not in [w for w in srcset_widths if w <= width]:
+        # Include original width if not already present and within limits
+        if width <= max_width_limit and width not in [w for w in srcset_widths if w <= max_width_limit]:
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
@@ -256,21 +258,22 @@ class TestImageTemplate(unittest.TestCase):
             f"/{asset_url}"
         )
 
-        srcset_widths = [460, 620, 1036, 1681, 2400]
+        srcset_widths = [320, 480, 768, 1024]
         srcset = []
         width = image_attrs["width"]
         
-        # Generate expected srcset with hi_def=True (up to 2x)
+        # Generate expected srcset with hi_def=True (up to 1.25x, capped at 1600px)
+        max_width_limit = min(width * 1.25, 1600)  # Conservative 1.25x, capped at 1600px
         for srcset_width in srcset_widths:
-            if srcset_width <= width * 2:  # Allow up to 2x with hi_def
+            if srcset_width <= max_width_limit:
                 srcset.append(
                     f"{cloudinary_url_base}/"
                     f"f_auto,q_auto,fl_sanitize,w_{srcset_width}/"
                     f"{asset_url} {srcset_width}w"
                 )
         
-        # Include original width if not already present
-        if width not in [w for w in srcset_widths if w <= width * 2]:
+        # Include original width if not already present and within limits
+        if width <= max_width_limit and width not in [w for w in srcset_widths if w <= max_width_limit]:
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
