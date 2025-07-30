@@ -83,12 +83,9 @@ def image_template(
 
     # Generate srcset values with optimized logic for real-world usage
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset
-    # Optimized for container max-width of 1386px on 2560px displays
-    # Most images are 50% or 100% of container, so max effective size is ~1386px
     # Conservative approach to minimize payload while maintaining quality
     if srcset_widths is None:
         # Focused on actual breakpoints: mobile, tablet, desktop
-        # Removed unnecessary large sizes that increase payload
         srcset_widths = [320, 480, 768, 1024]
 
     width_int = int(width)
