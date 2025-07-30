@@ -94,7 +94,8 @@ class TestImageTemplate(unittest.TestCase):
         self.assertIn("480w", markup)
         self.assertIn("768w", markup)
         self.assertIn("1024w", markup)
-        self.assertNotIn("1386w", markup)  # Should not include (exceeds 1x without hi_def)
+        # Should not include (exceeds 1x without hi_def)
+        self.assertNotIn("1386w", markup)
 
     def test_srcset_with_hi_def(self):
         markup = image_template(
@@ -125,14 +126,16 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1000",
             srcset_widths=custom_widths,
-            hi_def=True  # Enable hi_def but 1280w won't be included (1000 * 1.25 = 1250 < 1280)
+            # Enable hi_def but 1280w won't be included (1000 * 1.25 = 1250 < 1280)
+            hi_def=True
         )
 
         # Check the markup includes custom srcset widths within limits
         self.assertIn("srcset=", markup)
         self.assertIn("320w", markup)
         self.assertIn("640w", markup)
-        self.assertNotIn("1280w", markup)  # Not included (exceeds 1.25x limit for 1000px image)
+        # Not included (exceeds 1.25x limit for 1000px image)
+        self.assertNotIn("1280w", markup)
         # Should not include default widths that aren't in custom list
         self.assertNotIn("480w", markup)
         self.assertNotIn("768w", markup)
@@ -151,7 +154,8 @@ class TestImageTemplate(unittest.TestCase):
         self.assertIn("srcset=", markup)
         self.assertIn("320w", markup)
         self.assertIn("640w", markup)
-        self.assertNotIn("1280w", markup)  # Should not include (exceeds 1x without hi_def)
+        # Should not include (exceeds 1x without hi_def)
+        self.assertNotIn("1280w", markup)
         # Should not include default widths that aren't in custom list
         self.assertNotIn("480w", markup)
         self.assertNotIn("768w", markup)
@@ -194,6 +198,9 @@ class TestImageTemplate(unittest.TestCase):
             "attrs": {},
         }
 
+        decoded_asset_url = unquote(asset_url)
+        encoded_asset_url = quote(decoded_asset_url, safe="")
+
         returned_attrs = image_template(**image_attrs, output_mode="attrs")
 
         expected_attrs = image_attrs.copy()
@@ -202,13 +209,13 @@ class TestImageTemplate(unittest.TestCase):
 
         expected_attrs["src"] = (
             f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920"
-            f"/{asset_url}"
+            f"/{encoded_asset_url}"
         )
 
         srcset_widths = [320, 480, 768, 1024]
         srcset = []
         width = image_attrs["width"]
-        
+
         # Generate expected srcset based on improved logic (without hi_def, capped at 1386px)
         max_width_limit = min(width, 1386)  # Conservative cap at 1386px
         for srcset_width in srcset_widths:
@@ -216,17 +223,17 @@ class TestImageTemplate(unittest.TestCase):
                 srcset.append(
                     f"{cloudinary_url_base}/"
                     f"f_auto,q_auto,fl_sanitize,w_{srcset_width}/"
-                    f"{asset_url} {srcset_width}w"
+                    f"{encoded_asset_url} {srcset_width}w"
                 )
-        
+
         # Include original width if not already present and within limits
         if width <= max_width_limit and width not in [w for w in srcset_widths if w <= max_width_limit]:
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
-                f"{asset_url} {width}w"
+                f"{encoded_asset_url} {width}w"
             )
-            
+
         expected_attrs["srcset"] = ", ".join(srcset)
 
         expected_attrs["sizes"] = (
@@ -246,6 +253,9 @@ class TestImageTemplate(unittest.TestCase):
             "hi_def": True,
         }
 
+        decoded_asset_url = unquote(asset_url)
+        encoded_asset_url = quote(decoded_asset_url, safe="")
+
         returned_attrs = image_template(**image_attrs, output_mode="attrs")
 
         expected_attrs = image_attrs.copy()
@@ -255,31 +265,32 @@ class TestImageTemplate(unittest.TestCase):
 
         expected_attrs["src"] = (
             f"{cloudinary_url_base}/f_auto,q_auto,fl_sanitize,w_1920"
-            f"/{asset_url}"
+            f"/{encoded_asset_url}"
         )
 
         srcset_widths = [320, 480, 768, 1024]
         srcset = []
         width = image_attrs["width"]
-        
+
         # Generate expected srcset with hi_def=True (up to 1.25x, capped at 1600px)
-        max_width_limit = min(width * 1.25, 1600)  # Conservative 1.25x, capped at 1600px
+        # Conservative 1.25x, capped at 1600px
+        max_width_limit = min(width * 1.25, 1600)
         for srcset_width in srcset_widths:
             if srcset_width <= max_width_limit:
                 srcset.append(
                     f"{cloudinary_url_base}/"
                     f"f_auto,q_auto,fl_sanitize,w_{srcset_width}/"
-                    f"{asset_url} {srcset_width}w"
+                    f"{encoded_asset_url} {srcset_width}w"
                 )
-        
+
         # Include original width if not already present and within limits
         if width <= max_width_limit and width not in [w for w in srcset_widths if w <= max_width_limit]:
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
-                f"{asset_url} {width}w"
+                f"{encoded_asset_url} {width}w"
             )
-            
+
         expected_attrs["srcset"] = ", ".join(srcset)
         expected_attrs["sizes"] = (
             f"(min-width: {width}px) {width}px, 100vw"
