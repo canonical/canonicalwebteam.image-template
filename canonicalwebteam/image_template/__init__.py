@@ -61,8 +61,7 @@ def image_template(
 
     # If the original image does not match the requested
     # ratio set crop and fill see
-    # https://cloudinary.com/documentation/image_transformation_reference
-    # #crop_parameter
+    # https://cloudinary.com/documentation/image_transformation_reference#crop_parameter
     if fill:
         cloudinary_options.append("c_fill")
 
@@ -101,7 +100,6 @@ def image_template(
         else:
             max_width_limit = min(width_int, max_srcset_width)
 
-        # Include widths that make sense for responsive design
         def create_srcset_url(width, options):
             width_options = options.copy()
             width_options.append(f"w_{width}")
@@ -125,14 +123,14 @@ def image_template(
     image_srcset = ", ".join(srcset)
 
     try:
-        sizes_attr = sizes.format(width, width)
+        sizes = sizes.format(width, width)
     except (IndexError, KeyError):
-        sizes_attr = sizes
+        pass
 
     image_attrs = {
         "src": image_src,
         "srcset": image_srcset,
-        "sizes": sizes_attr,
+        "sizes": sizes,
         "alt": alt,
         "width": int(width),
         "height": height,
