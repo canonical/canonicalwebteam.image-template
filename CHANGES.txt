@@ -1,4 +1,4 @@
-v1.8.0, 2025-07-29: Optimized srcset widths and added responsive layout presets
+v1.8.0, 2025-07-29: Optimized srcset widths for responsive images
 v1.7.0, 2025-02-05: Encode urls to make sure wordpress images do not break
 v1.5.0, 2025-02-05: Add optional 'fmt' parameter for defining the format
 v1.4.2, 2024-12-19: Add 'c_limit' to hi-def cloudinary urls

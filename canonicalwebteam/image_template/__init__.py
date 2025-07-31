@@ -106,12 +106,16 @@ def image_template(
             width_options = options.copy()
             width_options.append(f"w_{width}")
             width_attrs = ",".join(width_options)
-            return f"{cloudinary_url_base}/{width_attrs}/{encoded_url} {width}w"
+            return (
+                f"{cloudinary_url_base}/{width_attrs}/"
+                f"{encoded_url} {width}w"
+            )
 
         # Generate srcset entries for standard widths
         filtered_widths = [w for w in srcset_widths if w <= max_width_limit]
-        srcset.extend(create_srcset_url(w, cloudinary_options)
-                      for w in filtered_widths)
+        srcset.extend(
+            create_srcset_url(w, cloudinary_options) for w in filtered_widths
+        )
 
         # Add original width if needed
         existing_widths = {int(w) for w in filtered_widths}
