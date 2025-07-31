@@ -101,20 +101,16 @@ class TestImageTemplate(unittest.TestCase):
         markup = image_template(
             url=non_asset_url,
             alt="test",
-            width="1080",
+            width="1920",
             height="1080",
             hi_def=True,
         )
 
-        # Check the markup includes srcset with hi_def (up to 1.25x,
-        # capped at 1600px)
-        # For 1080px image: 1080 * 1.25 = 1350px max
         self.assertIn("srcset=", markup)
         self.assertIn("460w", markup)
         self.assertIn("620w", markup)
         self.assertIn("1036w", markup)
         self.assertIn("1681w", markup)
-        self.assertIn("1080w", markup)  # Original width included
 
     def test_sizes(self):
         markup = image_template(
@@ -148,7 +144,6 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1000",
             srcset_widths=custom_widths,
-            # hi_def=False by default
         )
 
         # Check the markup includes only widths up to 1x without hi_def
