@@ -88,7 +88,7 @@ class TestImageTemplate(unittest.TestCase):
             url=non_asset_url, alt="test", width="1080", height="1080"
         )
 
-        # Check the markup includes srcset (without hi_def, only up to 
+        # Check the markup includes srcset (without hi_def, only up to
         # original width)
         self.assertIn("srcset=", markup)
         self.assertIn("320w", markup)
@@ -129,7 +129,7 @@ class TestImageTemplate(unittest.TestCase):
             alt="test",
             width="1000",
             srcset_widths=custom_widths,
-            # Enable hi_def but 1280w won't be included 
+            # Enable hi_def but 1280w won't be included
             # (1000 * 1.25 = 1250 < 1280)
             hi_def=True
         )
@@ -220,7 +220,7 @@ class TestImageTemplate(unittest.TestCase):
         srcset = []
         width = image_attrs["width"]
 
-        # Generate expected srcset based on improved logic (without hi_def, 
+        # Generate expected srcset based on improved logic (without hi_def,
         # capped at 1386px)
         max_width_limit = min(width, 1386)  # Conservative cap at 1386px
         for srcset_width in srcset_widths:
@@ -232,8 +232,9 @@ class TestImageTemplate(unittest.TestCase):
                 )
 
         # Include original width if not already present and within limits
-        if (width <= max_width_limit and 
-                width not in [w for w in srcset_widths if w <= max_width_limit]):
+        if (width <= max_width_limit and
+                width not in [w for w in srcset_widths
+                              if w <= max_width_limit]):
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
@@ -278,7 +279,7 @@ class TestImageTemplate(unittest.TestCase):
         srcset = []
         width = image_attrs["width"]
 
-        # Generate expected srcset with hi_def=True (up to 1.25x, 
+        # Generate expected srcset with hi_def=True (up to 1.25x,
         # capped at 1600px)
         # Conservative 1.25x, capped at 1600px
         max_width_limit = min(width * 1.25, 1600)
@@ -291,8 +292,9 @@ class TestImageTemplate(unittest.TestCase):
                 )
 
         # Include original width if not already present and within limits
-        if (width <= max_width_limit and 
-                width not in [w for w in srcset_widths if w <= max_width_limit]):
+        if (width <= max_width_limit and
+                width not in [w for w in srcset_widths
+                              if w <= max_width_limit]):
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
