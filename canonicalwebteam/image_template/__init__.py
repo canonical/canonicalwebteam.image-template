@@ -43,7 +43,7 @@ def image_template(
         output_mode: 'html' or 'attrs'
         sizes: Responsive sizes attribute template
         srcset_widths: Custom widths for srcset generation
-        hi_def: Enable conservative high-DPI support (up to 1.25x, 
+        hi_def: Enable conservative high-DPI support (up to 1.25x,
                 capped at 1600px)
     """
 
@@ -93,7 +93,7 @@ def image_template(
     width_int = int(width)
     srcset = []
 
-    # Only generate srcset for images larger than 100px to avoid 
+    # Only generate srcset for images larger than 100px to avoid
     # unnecessary overhead
     if width_int > 100:
         # Conservative approach: limit srcset to practical sizes
@@ -122,7 +122,7 @@ def image_template(
         # Include the original width only if it's within practical limits
         # and not already present in srcset
         if (width_int <= max_width_limit and
-                width_int not in [int(w) for w in srcset_widths 
+                width_int not in [int(w) for w in srcset_widths
                                   if w <= max_width_limit]):
             srcset_options = cloudinary_options.copy()
             srcset_options.append("w_" + str(width_int))
