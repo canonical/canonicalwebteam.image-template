@@ -101,10 +101,10 @@ def image_template(
         max_practical_width = min(width_int, 1386)
 
         # When hi_def is enabled, allow slightly larger for high-DPI
-        # But cap at 1.25x to avoid excessive payload
+        # But cap at 1.5x to avoid excessive payload
         if hi_def:
-            # Conservative 1.25x, capped at 1600px
-            max_width_limit = min(width_int * 1.5, 1600)
+            # Conservative 1.5x, capped at 1681px
+            max_width_limit = min(width_int * 1.5, 1681)
         else:
             max_width_limit = max_practical_width
 
