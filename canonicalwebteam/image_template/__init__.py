@@ -43,8 +43,7 @@ def image_template(
         output_mode: 'html' or 'attrs'
         sizes: Responsive sizes attribute template
         srcset_widths: Custom widths for srcset generation
-        hi_def: Enable conservative high-DPI support (up to 1.25x,
-                capped at 1600px)
+        hi_def: Enable high-DPI support (up to 2x)
     """
 
     url_parts = urlparse(url)
@@ -84,10 +83,8 @@ def image_template(
     )
 
     # Generate srcset values with optimized logic for real-world usage
-    # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-srcset
-    # Conservative approach to minimize payload while maintaining quality
+    # https://vanillaframework.io/docs/settings/breakpoint-settings
     if srcset_widths is None:
-        # Focused on actual breakpoints: mobile, tablet, desktop
         srcset_widths = [460, 620, 1036, 1681]
 
     width_int = int(width)
@@ -96,41 +93,30 @@ def image_template(
     # Only generate srcset for images larger than 100px to avoid
     # unnecessary overhead
     if width_int > 100:
-        # Conservative approach: limit srcset to practical sizes
-        # For most use cases, going beyond 1386px is unnecessary
-        max_practical_width = min(width_int, 1386)
-
+        max_srcset_width = max(srcset_widths)
         # When hi_def is enabled, allow slightly larger for high-DPI
-        # But cap at 1.5x to avoid excessive payload
+        # But cap at 2x to avoid excessive payload
         if hi_def:
-            # Conservative 1.5x, capped at 1681px
-            max_width_limit = min(width_int * 1.5, 1681)
+            max_width_limit = min(width_int * 2, max_srcset_width)
         else:
-            max_width_limit = max_practical_width
+            max_width_limit = min(width_int, max_srcset_width)
 
         # Include widths that make sense for responsive design
-        for srcset_width in srcset_widths:
-            if srcset_width <= max_width_limit:
-                srcset_options = cloudinary_options.copy()
-                srcset_options.append("w_" + str(srcset_width))
-                srcset_attrs = ",".join(srcset_options)
-                srcset.append(
-                    f"{cloudinary_url_base}/{srcset_attrs}/"
-                    f"{encoded_url} {srcset_width}w"
-                )
+        def create_srcset_url(width, options):
+            width_options = options.copy()
+            width_options.append(f"w_{width}")
+            width_attrs = ",".join(width_options)
+            return f"{cloudinary_url_base}/{width_attrs}/{encoded_url} {width}w"
 
-        # Include the original width only if it's within practical limits
-        # and not already present in srcset
-        if width_int <= max_width_limit and width_int not in [
-            int(w) for w in srcset_widths if w <= max_width_limit
-        ]:
-            srcset_options = cloudinary_options.copy()
-            srcset_options.append("w_" + str(width_int))
-            srcset_attrs = ",".join(srcset_options)
-            srcset.append(
-                f"{cloudinary_url_base}/{srcset_attrs}/"
-                f"{encoded_url} {width_int}w"
-            )
+        # Generate srcset entries for standard widths
+        filtered_widths = [w for w in srcset_widths if w <= max_width_limit]
+        srcset.extend(create_srcset_url(w, cloudinary_options)
+                      for w in filtered_widths)
+
+        # Add original width if needed
+        existing_widths = {int(w) for w in filtered_widths}
+        if width_int <= max_width_limit and width_int not in existing_widths:
+            srcset.append(create_srcset_url(width_int, cloudinary_options))
 
     image_srcset = ", ".join(srcset)
 
