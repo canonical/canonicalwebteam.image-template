@@ -43,7 +43,8 @@ def image_template(
         output_mode: 'html' or 'attrs'
         sizes: Responsive sizes attribute template
         srcset_widths: Custom widths for srcset generation
-        hi_def: Enable conservative high-DPI support (up to 1.25x, capped at 1600px)
+        hi_def: Enable conservative high-DPI support (up to 1.25x, 
+                capped at 1600px)
     """
 
     url_parts = urlparse(url)
@@ -61,7 +62,8 @@ def image_template(
 
     # If the original image does not match the requested
     # ratio set crop and fill see
-    # https://cloudinary.com/documentation/image_transformation_reference#crop_parameter
+    # https://cloudinary.com/documentation/image_transformation_reference
+    # #crop_parameter
     if fill:
         cloudinary_options.append("c_fill")
 
@@ -91,7 +93,8 @@ def image_template(
     width_int = int(width)
     srcset = []
 
-    # Only generate srcset for images larger than 100px to avoid unnecessary overhead
+    # Only generate srcset for images larger than 100px to avoid 
+    # unnecessary overhead
     if width_int > 100:
         # Conservative approach: limit srcset to practical sizes
         # For most use cases, going beyond 1386px is unnecessary
@@ -112,18 +115,21 @@ def image_template(
                 srcset_options.append("w_" + str(srcset_width))
                 srcset_attrs = ",".join(srcset_options)
                 srcset.append(
-                    f"{cloudinary_url_base}/{srcset_attrs}/{encoded_url} {srcset_width}w"
+                    f"{cloudinary_url_base}/{srcset_attrs}/"
+                    f"{encoded_url} {srcset_width}w"
                 )
 
         # Include the original width only if it's within practical limits
         # and not already present in srcset
         if (width_int <= max_width_limit and
-                width_int not in [int(w) for w in srcset_widths if w <= max_width_limit]):
+                width_int not in [int(w) for w in srcset_widths 
+                                  if w <= max_width_limit]):
             srcset_options = cloudinary_options.copy()
             srcset_options.append("w_" + str(width_int))
             srcset_attrs = ",".join(srcset_options)
             srcset.append(
-                f"{cloudinary_url_base}/{srcset_attrs}/{encoded_url} {width_int}w"
+                f"{cloudinary_url_base}/{srcset_attrs}/"
+                f"{encoded_url} {width_int}w"
             )
 
     image_srcset = ", ".join(srcset)
