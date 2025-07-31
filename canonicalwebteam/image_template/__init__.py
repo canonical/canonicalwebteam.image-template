@@ -88,7 +88,7 @@ def image_template(
     # Conservative approach to minimize payload while maintaining quality
     if srcset_widths is None:
         # Focused on actual breakpoints: mobile, tablet, desktop
-        srcset_widths = [320, 480, 768, 1024]
+        srcset_widths = [460, 620, 1036, 1681]
 
     width_int = int(width)
     srcset = []
@@ -104,7 +104,7 @@ def image_template(
         # But cap at 1.25x to avoid excessive payload
         if hi_def:
             # Conservative 1.25x, capped at 1600px
-            max_width_limit = min(width_int * 1.25, 1600)
+            max_width_limit = min(width_int * 1.5, 1600)
         else:
             max_width_limit = max_practical_width
 
