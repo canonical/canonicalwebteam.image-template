@@ -100,8 +100,11 @@ class TestImageTemplate(unittest.TestCase):
 
     def test_srcset_with_hi_def(self):
         markup = image_template(
-            url=non_asset_url, alt="test", width="1080", height="1080",
-            hi_def=True
+            url=non_asset_url,
+            alt="test",
+            width="1080",
+            height="1080",
+            hi_def=True,
         )
 
         # Check the markup includes srcset with hi_def (up to 1.25x,
@@ -116,7 +119,9 @@ class TestImageTemplate(unittest.TestCase):
 
     def test_sizes(self):
         markup = image_template(
-            url=non_asset_url, alt="test", width="540",
+            url=non_asset_url,
+            alt="test",
+            width="540",
         )
 
         # Check the markup includes sizes
@@ -131,7 +136,7 @@ class TestImageTemplate(unittest.TestCase):
             srcset_widths=custom_widths,
             # Enable hi_def but 1280w won't be included
             # (1000 * 1.25 = 1250 < 1280)
-            hi_def=True
+            hi_def=True,
         )
 
         # Check the markup includes custom srcset widths within limits
@@ -150,7 +155,7 @@ class TestImageTemplate(unittest.TestCase):
             url=non_asset_url,
             alt="test",
             width="1000",
-            srcset_widths=custom_widths
+            srcset_widths=custom_widths,
             # hi_def=False by default
         )
 
@@ -166,18 +171,14 @@ class TestImageTemplate(unittest.TestCase):
 
     def test_no_srcset_for_small_images(self):
         # Test with image smaller than 100px threshold
-        markup = image_template(
-            url=non_asset_url, alt="test", width="80"
-        )
+        markup = image_template(url=non_asset_url, alt="test", width="80")
 
         self.assertNotIn("srcset=", markup)
         self.assertNotIn("sizes=", markup)
 
     def test_srcset_for_medium_images(self):
         # Test with image larger than 100px threshold
-        markup = image_template(
-            url=non_asset_url, alt="test", width="150"
-        )
+        markup = image_template(url=non_asset_url, alt="test", width="150")
 
         self.assertIn("srcset=", markup)
         self.assertIn("sizes=", markup)
@@ -232,9 +233,9 @@ class TestImageTemplate(unittest.TestCase):
                 )
 
         # Include original width if not already present and within limits
-        if (width <= max_width_limit and
-                width not in [w for w in srcset_widths
-                              if w <= max_width_limit]):
+        if width <= max_width_limit and width not in [
+            w for w in srcset_widths if w <= max_width_limit
+        ]:
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
@@ -243,9 +244,7 @@ class TestImageTemplate(unittest.TestCase):
 
         expected_attrs["srcset"] = ", ".join(srcset)
 
-        expected_attrs["sizes"] = (
-            f"(min-width: {width}px) {width}px, 100vw"
-        )
+        expected_attrs["sizes"] = f"(min-width: {width}px) {width}px, 100vw"
 
         self.assertEqual(expected_attrs, returned_attrs)
 
@@ -292,9 +291,9 @@ class TestImageTemplate(unittest.TestCase):
                 )
 
         # Include original width if not already present and within limits
-        if (width <= max_width_limit and
-                width not in [w for w in srcset_widths
-                              if w <= max_width_limit]):
+        if width <= max_width_limit and width not in [
+            w for w in srcset_widths if w <= max_width_limit
+        ]:
             srcset.append(
                 f"{cloudinary_url_base}/"
                 f"f_auto,q_auto,fl_sanitize,w_{width}/"
@@ -302,9 +301,7 @@ class TestImageTemplate(unittest.TestCase):
             )
 
         expected_attrs["srcset"] = ", ".join(srcset)
-        expected_attrs["sizes"] = (
-            f"(min-width: {width}px) {width}px, 100vw"
-        )
+        expected_attrs["sizes"] = f"(min-width: {width}px) {width}px, 100vw"
 
         self.assertEqual(expected_attrs, returned_attrs)
 

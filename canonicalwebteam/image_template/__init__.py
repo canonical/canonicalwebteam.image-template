@@ -121,9 +121,9 @@ def image_template(
 
         # Include the original width only if it's within practical limits
         # and not already present in srcset
-        if (width_int <= max_width_limit and
-                width_int not in [int(w) for w in srcset_widths
-                                  if w <= max_width_limit]):
+        if width_int <= max_width_limit and width_int not in [
+            int(w) for w in srcset_widths if w <= max_width_limit
+        ]:
             srcset_options = cloudinary_options.copy()
             srcset_options.append("w_" + str(width_int))
             srcset_attrs = ",".join(srcset_options)
