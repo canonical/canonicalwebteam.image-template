@@ -48,6 +48,30 @@ def image_template(
 
     url_parts = urlparse(url)
 
+    # Check if the image is a format that doesn't need Cloudinary optimization
+    # SVG: Vector format, converting to WebP makes it blurry
+    # WebP/AVIF: Already optimized modern formats
+    # GIF: Animation would be lost in conversion
+    bypass_extensions = ('.svg', '.webp', '.avif', '.gif')
+    if url_parts.path.lower().endswith(bypass_extensions):
+        image_attrs = {
+            "src": url,
+            "alt": alt,
+            "width": int(width),
+            "height": height,
+            "loading": loading,
+            "attrs": attrs,
+        }
+
+        if output_mode == "html":
+            return template.render(**image_attrs)
+        elif output_mode == "attrs":
+            merged_attrs = {**image_attrs, **attrs}
+            del merged_attrs["attrs"]
+            return merged_attrs
+        else:
+            raise ValueError("output_mode must be 'html' or 'attrs'")
+
     # Default cloudinary optimisations
     # https://cloudinary.com/documentation/image_transformations
     cloudinary_options = [

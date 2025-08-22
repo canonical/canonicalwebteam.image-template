@@ -233,6 +233,50 @@ class TestImageTemplate(unittest.TestCase):
 
         self.assertEqual(expected_attrs, returned_attrs)
 
+    def test_optimized_formats_bypass_cloudinary(self):
+        """Test that optimized formats bypass Cloudinary processing"""
+        test_urls = [
+            "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg",
+            "https://example.com/image.webp",
+            "https://example.com/image.avif",
+            "https://example.com/animation.gif"
+        ]
+
+        for test_url in test_urls:
+            with self.subTest(url=test_url):
+                # Test HTML output
+                html_result = image_template(
+                    url=test_url,
+                    alt="Test Image",
+                    width="200",
+                    height="100"
+                )
+
+                # Should use original URL, not Cloudinary
+                self.assertIn(test_url, html_result)
+                self.assertNotIn("res.cloudinary.com", html_result)
+                self.assertNotIn("srcset", html_result)
+
+                # Test attrs output
+                attrs_result = image_template(
+                    url=test_url,
+                    alt="Test Image",
+                    width="200",
+                    height="100",
+                    output_mode="attrs"
+                )
+
+                expected_attrs = {
+                    "src": test_url,
+                    "alt": "Test Image",
+                    "width": 200,
+                    "height": "100",
+                    "loading": "lazy"
+                }
+
+                self.assertEqual(expected_attrs, attrs_result)
+                self.assertNotIn("srcset", attrs_result)
+
 
 if __name__ == "__main__":
     unittest.main()
