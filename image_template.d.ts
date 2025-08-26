@@ -41,31 +41,11 @@ export interface ImageAttributes {
 }
 
 /**
- * Image Template class for generating responsive image attributes
- */
-export declare class ImageTemplate {
-  constructor();
-  
-  /**
-   * Generate responsive image attributes with optimized srcset and sizes
-   */
-  imageTemplate(options: ImageTemplateOptions): ImageAttributes;
-  
-  /**
-   * Render HTML string from image attributes
-   */
-  renderHtml(imageAttrs: ImageAttributes): string;
-  
-  /**
-   * Escape HTML special characters
-   */
-  escapeHtml(text: string): string;
-}
-
-/**
- * Convenience function that matches the Python API
+ * Generate responsive image attributes for Cloudinary integration
+ * @param options - Image template options
+ * @returns Image attributes object
  */
 export declare function imageTemplate(options: ImageTemplateOptions): ImageAttributes;
 
 // Default export for CommonJS compatibility
-export { ImageTemplate as default };
+export = { imageTemplate };

@@ -2,6 +2,17 @@
 
 This guide shows how to integrate the JavaScript image template implementation into your JavaScript/TypeScript projects.
 
+## Key Features
+
+- **Simple Function**: Clean, straightforward function-based API (no classes)
+- **Universal Compatibility**: Works in Node.js, browsers, and all major JavaScript frameworks
+- **Cloudinary Integration**: Automatic optimization for supported image formats
+- **Responsive Images**: Generates `srcset` and `sizes` attributes for optimal loading
+- **Format Detection**: Smart handling of SVG, WebP, AVIF, and GIF formats
+- **Type Safety**: Full TypeScript definitions included
+- **Attributes Object Output**: Returns clean JavaScript object for direct use with DOM elements
+- **Framework Ready**: Easy integration with React, Vue, Angular, and Svelte
+
 ## Installation Options
 
 ### Option 1: NPM Package (Recommended)
