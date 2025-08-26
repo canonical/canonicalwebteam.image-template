@@ -21,8 +21,6 @@ export interface ImageTemplateOptions {
   fmt?: string;
   /** Additional HTML attributes */
   attrs?: Record<string, string | number | boolean>;
-  /** Output mode */
-  outputMode?: 'html' | 'attrs';
   /** Responsive sizes attribute template */
   sizes?: string;
   /** Custom widths for srcset generation */
@@ -43,15 +41,15 @@ export interface ImageAttributes {
 }
 
 /**
- * Image Template class for generating responsive image markup
+ * Image Template class for generating responsive image attributes
  */
 export declare class ImageTemplate {
   constructor();
   
   /**
-   * Generate responsive image markup with optimized srcset and sizes
+   * Generate responsive image attributes with optimized srcset and sizes
    */
-  imageTemplate(options: ImageTemplateOptions): string | ImageAttributes;
+  imageTemplate(options: ImageTemplateOptions): ImageAttributes;
   
   /**
    * Render HTML string from image attributes
@@ -67,7 +65,7 @@ export declare class ImageTemplate {
 /**
  * Convenience function that matches the Python API
  */
-export declare function imageTemplate(options: ImageTemplateOptions): string | ImageAttributes;
+export declare function imageTemplate(options: ImageTemplateOptions): ImageAttributes;
 
 // Default export for CommonJS compatibility
 export { ImageTemplate as default };

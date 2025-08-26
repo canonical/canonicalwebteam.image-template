@@ -41,15 +41,15 @@ cp image_template.d.ts your-project/src/utils/  # For TypeScript projects
 ```javascript
 const { imageTemplate } = require('@canonical/image-template');
 
-// Generate responsive image HTML
-const html = imageTemplate({
+// Generate responsive image attributes
+const attrs = imageTemplate({
   url: 'https://example.com/image.jpg',
   alt: 'Product image',
   width: 800,
   height: 600
 });
 
-console.log(html);
+console.log(attrs);
 ```
 
 ### ES Modules (Modern JavaScript)
@@ -57,15 +57,18 @@ console.log(html);
 ```javascript
 import { imageTemplate } from '@canonical/image-template';
 
-// Generate responsive image HTML
-const html = imageTemplate({
+// Generate responsive image attributes
+const attrs = imageTemplate({
   url: 'https://example.com/image.jpg',
   alt: 'Product image',
   width: 800,
   height: 600
 });
 
-document.getElementById('container').innerHTML = html;
+// Apply attributes to an img element
+const img = document.createElement('img');
+Object.assign(img, attrs);
+document.getElementById('container').appendChild(img);
 ```
 
 ### TypeScript
@@ -86,7 +89,7 @@ const options: ImageTemplateOptions = {
   }
 };
 
-const html: string = imageTemplate(options) as string;
+const attrs = imageTemplate(options);
 ```
 
 ### Browser (Global Script)
@@ -95,14 +98,17 @@ const html: string = imageTemplate(options) as string;
 <script src="path/to/image_template.js"></script>
 <script>
   // Use global imageTemplate function
-  const html = imageTemplate({
+  const attrs = imageTemplate({
     url: 'https://example.com/image.jpg',
     alt: 'Product image',
     width: 800,
     height: 600
   });
   
-  document.getElementById('container').innerHTML = html;
+  // Apply attributes to an img element
+  const img = document.createElement('img');
+  Object.assign(img, attrs);
+  document.getElementById('container').appendChild(img);
 </script>
 ```
 
@@ -115,37 +121,38 @@ import React from 'react';
 import { imageTemplate } from '@canonical/image-template';
 
 function ProductImage({ src, alt, width, height }) {
-  const imageHtml = imageTemplate({
-    url: src,
-    alt,
-    width,
-    height,
-    outputMode: 'attrs'
-  });
-  
-  return (
-    <img
-      src={imageHtml.src}
-      srcSet={imageHtml.srcset}
-      sizes={imageHtml.sizes}
-      alt={imageHtml.alt}
-      width={imageHtml.width}
-      height={imageHtml.height}
-      loading={imageHtml.loading}
-    />
-  );
-}
-
-// Or using dangerouslySetInnerHTML (less safe)
-function ProductImageHTML({ src, alt, width, height }) {
-  const imageHtml = imageTemplate({
+  const imageAttrs = imageTemplate({
     url: src,
     alt,
     width,
     height
   });
   
-  return <div dangerouslySetInnerHTML={{ __html: imageHtml }} />;
+  return (
+    <img
+      src={imageAttrs.src}
+      srcSet={imageAttrs.srcset}
+      sizes={imageAttrs.sizes}
+      alt={imageAttrs.alt}
+      width={imageAttrs.width}
+      height={imageAttrs.height}
+      loading={imageAttrs.loading}
+    />
+  );
+}
+
+// Or creating HTML string manually (less recommended)
+function ProductImageHTML({ src, alt, width, height }) {
+  const imageAttrs = imageTemplate({
+    url: src,
+    alt,
+    width,
+    height
+  });
+  
+  const htmlString = `<img src="${imageAttrs.src}" srcset="${imageAttrs.srcset}" sizes="${imageAttrs.sizes}" alt="${imageAttrs.alt}" width="${imageAttrs.width}" height="${imageAttrs.height}" loading="${imageAttrs.loading}" />`;
+  
+  return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
 }
 ```
 
@@ -153,7 +160,7 @@ function ProductImageHTML({ src, alt, width, height }) {
 
 ```vue
 <template>
-  <div v-html="imageHtml"></div>
+  <img v-bind="imageAttrs" />
 </template>
 
 <script>
@@ -162,7 +169,7 @@ import { imageTemplate } from '@canonical/image-template';
 export default {
   props: ['src', 'alt', 'width', 'height'],
   computed: {
-    imageHtml() {
+    imageAttrs() {
       return imageTemplate({
         url: this.src,
         alt: this.alt,
@@ -180,12 +187,17 @@ export default {
 ```typescript
 // image.component.ts
 import { Component, Input } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { imageTemplate } from '@canonical/image-template';
 
 @Component({
   selector: 'app-image',
-  template: '<div [innerHTML]="safeHtml"></div>'
+  template: `<img [attr.src]="imageAttrs.src" 
+                  [attr.srcset]="imageAttrs.srcset"
+                  [attr.sizes]="imageAttrs.sizes"
+                  [attr.alt]="imageAttrs.alt"
+                  [attr.width]="imageAttrs.width"
+                  [attr.height]="imageAttrs.height"
+                  [attr.loading]="imageAttrs.loading" />`
 })
 export class ImageComponent {
   @Input() src!: string;
@@ -193,16 +205,13 @@ export class ImageComponent {
   @Input() width!: number;
   @Input() height?: number;
   
-  constructor(private sanitizer: DomSanitizer) {}
-  
-  get safeHtml(): SafeHtml {
-    const html = imageTemplate({
+  get imageAttrs() {
+    return imageTemplate({
       url: this.src,
       alt: this.alt,
       width: this.width,
       height: this.height
     });
-    return this.sanitizer.bypassSecurityTrustHtml(html as string);
   }
 }
 ```
@@ -218,7 +227,7 @@ export class ImageComponent {
   export let width;
   export let height;
   
-  $: imageHtml = imageTemplate({
+  $: imageAttrs = imageTemplate({
     url: src,
     alt,
     width,
@@ -226,7 +235,7 @@ export class ImageComponent {
   });
 </script>
 
-{@html imageHtml}
+<img {...imageAttrs} />
 ```
 
 ## Build Tool Configuration

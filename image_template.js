@@ -22,11 +22,10 @@ class ImageTemplate {
    * @param {string} [options.loading='lazy'] - Loading strategy ('lazy', 'auto')
    * @param {string} [options.fmt='auto'] - Image format ('auto', 'webp', 'jpg', etc.)
    * @param {Object} [options.attrs={}] - Additional HTML attributes
-   * @param {string} [options.outputMode='html'] - 'html' or 'attrs'
    * @param {string} [options.sizes='(min-width: {}px) {}px, 100vw'] - Responsive sizes attribute template
    * @param {number[]} [options.srcsetWidths] - Custom widths for srcset generation
    * @param {boolean} [options.hiDef=false] - Enable high-DPI support (up to 2x)
-   * @returns {string|Object} HTML string or attributes object
+   * @returns {Object} Attributes object for use with img elements
    */
   imageTemplate({
     url,
@@ -38,7 +37,6 @@ class ImageTemplate {
     loading = 'lazy',
     fmt = 'auto',
     attrs = {},
-    outputMode = 'html',
     sizes = '(min-width: {}px) {}px, 100vw',
     srcsetWidths = null,
     hiDef = false
@@ -63,15 +61,10 @@ class ImageTemplate {
         attrs: attrs
       };
 
-      if (outputMode === 'html') {
-        return this.renderHtml(imageAttrs);
-      } else if (outputMode === 'attrs') {
-        const mergedAttrs = { ...imageAttrs, ...attrs };
-        delete mergedAttrs.attrs;
-        return mergedAttrs;
-      } else {
-        throw new Error("outputMode must be 'html' or 'attrs'");
-      }
+      // Always return attributes object
+      const mergedAttrs = { ...imageAttrs, ...attrs };
+      delete mergedAttrs.attrs;
+      return mergedAttrs;
     }
 
     // Default cloudinary optimizations
@@ -168,84 +161,13 @@ class ImageTemplate {
       delete imageAttrs.sizes;
     }
 
-    if (outputMode === 'html') {
-      return this.renderHtml(imageAttrs);
-    } else if (outputMode === 'attrs') {
-      const mergedAttrs = { ...imageAttrs, ...attrs };
-      delete mergedAttrs.attrs;
-      return mergedAttrs;
-    } else {
-      throw new Error("outputMode must be 'html' or 'attrs'");
-    }
+    // Always return attributes object
+    const mergedAttrs = { ...imageAttrs, ...attrs };
+    delete mergedAttrs.attrs;
+    return mergedAttrs;
   }
 
-  /**
-   * Render HTML string from image attributes
-   * @param {Object} imageAttrs - Image attributes object
-   * @returns {string} HTML string
-   */
-  renderHtml(imageAttrs) {
-    let html = '<img';
-    
-    // Add src attribute
-    html += ` src="${this.escapeHtml(imageAttrs.src)}"`;
-    
-    // Add srcset if present
-    if (imageAttrs.srcset) {
-      html += ` srcset="${this.escapeHtml(imageAttrs.srcset)}"`;
-    }
-    
-    // Add sizes if present
-    if (imageAttrs.sizes) {
-      html += ` sizes="${this.escapeHtml(imageAttrs.sizes)}"`;
-    }
-    
-    // Add alt attribute
-    html += ` alt="${this.escapeHtml(imageAttrs.alt)}"`;
-    
-    // Add width attribute
-    html += ` width="${imageAttrs.width}"`;
-    
-    // Add height if present
-    if (imageAttrs.height !== null && imageAttrs.height !== undefined) {
-      html += ` height="${imageAttrs.height}"`;
-    }
-    
-    // Add loading attribute
-    html += ` loading="${this.escapeHtml(imageAttrs.loading)}"`;
-    
-    // Add additional attributes
-    if (imageAttrs.attrs && typeof imageAttrs.attrs === 'object') {
-      for (const [attrName, attrValue] of Object.entries(imageAttrs.attrs)) {
-        html += ` ${attrName}="${this.escapeHtml(String(attrValue))}"`;
-      }
-    }
-    
-    html += ' />';
-    return html;
-  }
-
-  /**
-   * Escape HTML special characters
-   * @param {string} text - Text to escape
-   * @returns {string} Escaped text
-   */
-  escapeHtml(text) {
-    if (typeof document !== 'undefined') {
-      // Browser environment
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    } else {
-      // Node.js environment - manual escaping
-      return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-  }
+  // HTML generation methods removed - only attributes objects are returned
 }
 
 // Create a singleton instance for easy usage
@@ -254,7 +176,7 @@ const imageTemplateInstance = new ImageTemplate();
 /**
  * Convenience function that matches the Python API
  * @param {Object} options - Same options as ImageTemplate.imageTemplate
- * @returns {string|Object} HTML string or attributes object
+ * @returns {Object} Attributes object for use with img elements
  */
 function imageTemplate(options) {
   return imageTemplateInstance.imageTemplate(options);

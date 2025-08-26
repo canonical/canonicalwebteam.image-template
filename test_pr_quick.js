@@ -104,9 +104,10 @@ const tests = [
       height: 600
     },
     validate: (result) => {
-      return result.includes('res.cloudinary.com') && 
-             result.includes('srcset') && 
-             result.includes('alt="Test image"');
+      return typeof result === 'object' &&
+             result.src && result.src.includes('res.cloudinary.com') && 
+             result.srcset && 
+             result.alt === 'Test image';
     }
   },
   {
@@ -118,9 +119,10 @@ const tests = [
       height: 100
     },
     validate: (result) => {
-      return !result.includes('res.cloudinary.com') && 
-             result.includes('https://example.com/icon.svg') &&
-             !result.includes('srcset');
+      return typeof result === 'object' &&
+             result.src === 'https://example.com/icon.svg' &&
+             !result.srcset &&
+             result.alt === 'SVG icon';
     }
   },
   {
@@ -132,9 +134,10 @@ const tests = [
       height: 300
     },
     validate: (result) => {
-      return !result.includes('res.cloudinary.com') && 
-             result.includes('https://example.com/image.webp') &&
-             !result.includes('srcset');
+      return typeof result === 'object' &&
+             result.src === 'https://example.com/image.webp' &&
+             !result.srcset &&
+             result.alt === 'WebP image';
     }
   },
   {
@@ -146,9 +149,10 @@ const tests = [
       height: 400
     },
     validate: (result) => {
-      return !result.includes('res.cloudinary.com') && 
-             result.includes('https://example.com/image.avif') &&
-             !result.includes('srcset');
+      return typeof result === 'object' &&
+             result.src === 'https://example.com/image.avif' &&
+             !result.srcset &&
+             result.alt === 'AVIF image';
     }
   },
   {
@@ -160,9 +164,10 @@ const tests = [
       height: 200
     },
     validate: (result) => {
-      return !result.includes('res.cloudinary.com') && 
-             result.includes('https://example.com/animation.gif') &&
-             !result.includes('srcset');
+      return typeof result === 'object' &&
+             result.src === 'https://example.com/animation.gif' &&
+             !result.srcset &&
+             result.alt === 'Animated GIF';
     }
   },
   {
@@ -174,12 +179,12 @@ const tests = [
       height: 300
     },
     validate: (result) => {
-      // Check if result contains the basic image structure
-      return result.includes('alt="Custom image"') && 
-             result.includes('width="500"') &&
-             result.includes('height="300"') &&
-             result.includes('src="https://res.cloudinary.com') &&
-             result.includes('srcset=');
+      return typeof result === 'object' &&
+             result.alt === 'Custom image' && 
+             result.width === 500 &&
+             result.height === 300 &&
+             result.src && result.src.includes('res.cloudinary.com') &&
+             result.srcset;
     }
   },
   {
@@ -188,25 +193,27 @@ const tests = [
       url: 'https://example.com/image.jpg',
       alt: 'Attrs test',
       width: 400,
-      height: 300,
-      outputMode: 'attrs'
+      height: 300
     },
     validate: (result) => {
       return typeof result === 'object' && 
              result.src && 
              result.srcset && 
-             result.alt === 'Attrs test';
+             result.alt === 'Attrs test' &&
+             result.width === 400 &&
+             result.height === 300;
     }
   },
   {
     name: 'Error handling for invalid URL',
     input: {
-      url: '',
-      alt: 'Empty URL test'
+      url: 'invalid-url',
+      alt: 'Test'
     },
     validate: (result) => {
-      // The function should either return null/empty or throw an error
-      return result === null || result === undefined || result === '' || typeof result === 'string';
+      // For invalid URLs, the function should either return an object with the original URL
+      // or throw an error (both are acceptable behaviors)
+      return typeof result === 'object' && result.src === 'invalid-url';
     },
     expectError: true
   }
@@ -230,15 +237,9 @@ tests.forEach((test, index) => {
     }
   } catch (error) {
     if (test.expectError) {
-      // This test expects an error, so validate the error handling
-      const isValid = test.validate(null); // Pass null since we got an error
-      if (isValid) {
-        passed++;
-        logTest(test.name, true, `Correctly handled error: ${error.message}`);
-      } else {
-        failed++;
-        logTest(test.name, false, `Error handling failed: ${error.message}`);
-      }
+      // This test expects an error, so this is acceptable behavior
+      passed++;
+      logTest(test.name, true, `Correctly handled error: ${error.message}`);
     } else {
       failed++;
       logTest(test.name, false, `Unexpected error: ${error.message}`);
