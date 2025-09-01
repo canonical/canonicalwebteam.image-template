@@ -47,13 +47,13 @@ def image_template(
     """
 
     url_parts = urlparse(url)
-    
+
     if not url_parts.netloc:
         raise Exception("url must contain a hostname")
-    
+
     # Determine format based on file extension and fmt parameter
     file_extension = url_parts.path.lower().split('.')[-1]
-    
+
     # Set format based on file type, using fmt parameter if provided
     if file_extension == 'svg':
         format_param = "f_svg" if fmt == "auto" else f"f_{fmt}"
@@ -64,25 +64,29 @@ def image_template(
     else:
         format_param = f"f_{fmt}"
         generate_srcset = True
-    
-    # Build cloudinary options
+
+    # Default cloudinary optimisations
+    # https://cloudinary.com/documentation/image_transformations
     cloudinary_options = [
         format_param,
         "q_auto",  # Auto optimise quality
-        "fl_sanitize",  # Sanitize content
+        "fl_sanitize",  # Sanitize SVG content
     ]
-    
+
     if e_sharpen:
         cloudinary_options.append("e_sharpen")
-    
+
+    # If the original image does not match the requested
+    # ratio set crop and fill see
+    # https://cloudinary.com/documentation/image_transformation_reference#crop_parameter
     if fill:
         cloudinary_options.append("c_fill")
-    
+
     # Create main image source
     std_def_cloudinary_options = cloudinary_options.copy()
     std_def_cloudinary_options.append(f"w_{width}")
     std_def_cloudinary_attrs = ",".join(std_def_cloudinary_options)
-    
+
     # Decode the URL first to prevent double encoding
     decoded_url = unquote(url)
     encoded_url = quote(decoded_url, safe="")
@@ -91,16 +95,16 @@ def image_template(
         f"{std_def_cloudinary_attrs}/"
         f"{encoded_url}"
     )
-    
+
     # Generate srcset if needed
     image_srcset = ""
     if generate_srcset:
         if srcset_widths is None:
             srcset_widths = [460, 620, 1036, 1681]
-        
+
         width_int = int(width)
         srcset = []
-        
+
         # Only generate srcset for images larger than 100px
         if width_int > 100:
             max_srcset_width = max(srcset_widths)
@@ -108,7 +112,7 @@ def image_template(
                 max_width_limit = min(width_int * 2, max_srcset_width)
             else:
                 max_width_limit = min(width_int, max_srcset_width)
-            
+
             def create_srcset_url(width, options):
                 width_options = options.copy()
                 width_options.append(f"w_{width}")
@@ -117,26 +121,27 @@ def image_template(
                     f"{cloudinary_url_base}/{width_attrs}/"
                     f"{encoded_url} {width}w"
                 )
-            
+
             # Generate srcset entries for standard widths
-            filtered_widths = [w for w in srcset_widths if w <= max_width_limit]
+            filtered_widths = [
+                w for w in srcset_widths if w <= max_width_limit]
             srcset.extend(
                 create_srcset_url(w, cloudinary_options) for w in filtered_widths
             )
-            
+
             # Add original width if needed
             existing_widths = {int(w) for w in filtered_widths}
             if width_int <= max_width_limit and width_int not in existing_widths:
                 srcset.append(create_srcset_url(width_int, cloudinary_options))
-        
+
         image_srcset = ", ".join(srcset)
-    
+
     # Format sizes attribute
     try:
         sizes = sizes.format(width, width)
     except (IndexError, KeyError):
         pass
-    
+
     # Build image attributes
     image_attrs = {
         "src": image_src,
@@ -146,12 +151,12 @@ def image_template(
         "loading": loading,
         "attrs": attrs,
     }
-    
+
     # Add srcset and sizes if generated
     if image_srcset:
         image_attrs["srcset"] = image_srcset
         image_attrs["sizes"] = sizes
-    
+
     # Return based on output mode
     if output_mode == "html":
         return template.render(**image_attrs)
