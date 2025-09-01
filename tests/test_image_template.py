@@ -233,49 +233,118 @@ class TestImageTemplate(unittest.TestCase):
 
         self.assertEqual(expected_attrs, returned_attrs)
 
-    def test_optimized_formats_bypass_cloudinary(self):
-        """Test that optimized formats bypass Cloudinary processing"""
-        test_urls = [
-            "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg",
-            "https://example.com/image.webp",
-            "https://example.com/image.avif",
-            "https://example.com/animation.gif"
+    # GIF handling removed as requested
+
+    def test_webp_avif_use_cloudinary_with_srcset(self):
+        """Test that WebP and AVIF files use Cloudinary with format preservation and srcset"""
+        test_cases = [
+            ("https://example.com/image.webp", "f_webp"),
+            ("https://example.com/image.avif", "f_avif")
         ]
 
-        for test_url in test_urls:
-            with self.subTest(url=test_url):
-                # Test HTML output
-                html_result = image_template(
-                    url=test_url,
-                    alt="Test Image",
-                    width="200",
-                    height="100"
-                )
-
-                # Should use original URL, not Cloudinary
-                self.assertIn(test_url, html_result)
-                self.assertNotIn("res.cloudinary.com", html_result)
-                self.assertNotIn("srcset", html_result)
-
-                # Test attrs output
+        for test_url, expected_format in test_cases:
+            with self.subTest(url=test_url, format=expected_format):
+                # Test attrs output for easier assertion
                 attrs_result = image_template(
                     url=test_url,
                     alt="Test Image",
-                    width="200",
-                    height="100",
+                    width="500",
+                    height="300",
                     output_mode="attrs"
                 )
 
-                expected_attrs = {
-                    "src": test_url,
-                    "alt": "Test Image",
-                    "width": 200,
-                    "height": "100",
-                    "loading": "lazy"
-                }
+                # Should use Cloudinary URL with format preservation
+                self.assertIn("res.cloudinary.com", attrs_result["src"])
+                self.assertIn(expected_format, attrs_result["src"])
+                self.assertIn("q_auto", attrs_result["src"])
+                self.assertIn("fl_sanitize", attrs_result["src"])
+                self.assertIn("w_500", attrs_result["src"])
+                
+                # Should have srcset for images > 100px
+                self.assertIn("srcset", attrs_result)
+                self.assertIn("res.cloudinary.com", attrs_result["srcset"])
+                self.assertIn(expected_format, attrs_result["srcset"])
+                
+                # Should have sizes attribute
+                self.assertIn("sizes", attrs_result)
 
-                self.assertEqual(expected_attrs, attrs_result)
-                self.assertNotIn("srcset", attrs_result)
+    def test_webp_avif_with_fill_and_sharpen(self):
+        """Test that WebP and AVIF files respect fill and sharpen parameters"""
+        test_url = "https://example.com/image.webp"
+        
+        attrs_result = image_template(
+            url=test_url,
+            alt="Test Image",
+            width="400",
+            height="200",
+            fill=True,
+            e_sharpen=True,
+            output_mode="attrs"
+        )
+
+        # Should include fill and sharpen in both src and srcset
+        self.assertIn("c_fill", attrs_result["src"])
+        self.assertIn("e_sharpen", attrs_result["src"])
+        self.assertIn("c_fill", attrs_result["srcset"])
+        self.assertIn("e_sharpen", attrs_result["srcset"])
+
+    def test_svg_uses_cloudinary_with_f_svg(self):
+        """Test that SVG files use Cloudinary with f_svg format and no srcset"""
+        svg_url = "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
+        
+        # Test HTML output
+        html_result = image_template(
+            url=svg_url,
+            alt="Test SVG",
+            width="200",
+            height="100"
+        )
+
+        # Should use Cloudinary with f_svg
+        self.assertIn("res.cloudinary.com", html_result)
+        self.assertIn("f_svg", html_result)
+        self.assertIn("fl_sanitize", html_result)
+        self.assertIn("w_200", html_result)
+        self.assertNotIn("srcset", html_result)
+
+        # Test attrs output
+        attrs_result = image_template(
+            url=svg_url,
+            alt="Test SVG",
+            width="200",
+            height="100",
+            output_mode="attrs"
+        )
+
+        # Should have Cloudinary URL with f_svg
+        self.assertIn("res.cloudinary.com", attrs_result["src"])
+        self.assertIn("f_svg", attrs_result["src"])
+        self.assertIn("fl_sanitize", attrs_result["src"])
+        self.assertIn("w_200", attrs_result["src"])
+        self.assertEqual(attrs_result["alt"], "Test SVG")
+        self.assertEqual(attrs_result["width"], 200)
+        self.assertEqual(attrs_result["height"], "100")
+        self.assertEqual(attrs_result["loading"], "lazy")
+        self.assertNotIn("srcset", attrs_result)
+
+    def test_svg_with_fill_and_sharpen(self):
+        """Test that SVG files respect fill and e_sharpen parameters"""
+        svg_url = "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
+        
+        attrs_result = image_template(
+            url=svg_url,
+            alt="Test SVG",
+            width="200",
+            height="100",
+            fill=True,
+            e_sharpen=True,
+            output_mode="attrs"
+        )
+
+        # Should include fill and sharpen parameters
+        self.assertIn("c_fill", attrs_result["src"])
+        self.assertIn("e_sharpen", attrs_result["src"])
+        self.assertIn("f_svg", attrs_result["src"])
 
 
 if __name__ == "__main__":
