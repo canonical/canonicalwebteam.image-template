@@ -156,12 +156,30 @@ class TestImageTemplate(unittest.TestCase):
         self.assertNotIn("620w", markup)
         self.assertNotIn("1036w", markup)
 
-    def test_no_srcset_for_small_images(self):
-        # Test with image smaller than 100px threshold
-        markup = image_template(url=non_asset_url, alt="test", width="80")
+    def test_small_images_generate_2x_srcset(self):
+        """Test that small images (≤100px) generate 2x srcset for high-DPI displays"""
+        html_result = image_template(
+            url="https://example.com/image.jpg",
+            alt="Test Image",
+            width="50",
+            height="50"
+        )
 
-        self.assertNotIn("srcset=", markup)
-        self.assertNotIn("sizes=", markup)
+        # Should contain srcset with 2x version
+        self.assertIn("srcset", html_result)
+        self.assertIn("100w", html_result)  # 2x the original 50px width
+
+        attrs_result = image_template(
+            url="https://example.com/image.jpg",
+            alt="Test Image",
+            width="50",
+            height="50",
+            output_mode="attrs"
+        )
+
+        # Should have srcset with 2x version
+        self.assertIn("srcset", attrs_result)
+        self.assertIn("100w", attrs_result["srcset"])
 
     def test_srcset_for_medium_images(self):
         # Test with image larger than 100px threshold

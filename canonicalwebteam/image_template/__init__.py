@@ -105,22 +105,26 @@ def image_template(
         width_int = int(width)
         srcset = []
 
-        # Only generate srcset for images larger than 100px
-        if width_int > 100:
+        def create_srcset_url(width, options):
+            width_options = options.copy()
+            width_options.append(f"w_{width}")
+            width_attrs = ",".join(width_options)
+            return (
+                f"{cloudinary_url_base}/{width_attrs}/"
+                f"{encoded_url} {width}w"
+            )
+
+        # Handle small images (≤100px) - generate 2x for high-DPI displays
+        if width_int <= 100:
+            # Add 2x version for high-DPI displays to prevent pixelation
+            srcset.append(create_srcset_url(width_int * 2, cloudinary_options))
+        else:
+            # Handle larger images with standard responsive widths
             max_srcset_width = max(srcset_widths)
             if hi_def:
                 max_width_limit = min(width_int * 2, max_srcset_width)
             else:
                 max_width_limit = min(width_int, max_srcset_width)
-
-            def create_srcset_url(width, options):
-                width_options = options.copy()
-                width_options.append(f"w_{width}")
-                width_attrs = ",".join(width_options)
-                return (
-                    f"{cloudinary_url_base}/{width_attrs}/"
-                    f"{encoded_url} {width}w"
-                )
 
             # Generate srcset entries for standard widths
             filtered_widths = [
