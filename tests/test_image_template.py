@@ -157,12 +157,12 @@ class TestImageTemplate(unittest.TestCase):
         self.assertNotIn("1036w", markup)
 
     def test_small_images_generate_2x_srcset(self):
-        """Test that small images (≤460px) generate 2x srcset for high-DPI displays"""
+        """Test that small images (≤460px) generate 2x srcset"""
         html_result = image_template(
             url="https://example.com/image.jpg",
             alt="Test Image",
             width="50",
-            height="50"
+            height="50",
         )
 
         # Should contain srcset with 2x version
@@ -174,7 +174,7 @@ class TestImageTemplate(unittest.TestCase):
             alt="Test Image",
             width="50",
             height="50",
-            output_mode="attrs"
+            output_mode="attrs",
         )
 
         # Should have srcset with 2x version
@@ -254,10 +254,11 @@ class TestImageTemplate(unittest.TestCase):
     # GIF handling removed as requested
 
     def test_webp_avif_use_cloudinary_with_srcset(self):
-        """Test that WebP and AVIF files use Cloudinary with format preservation and srcset"""
+        # Test that WebP and AVIF files use Cloudinary
+        # with format preservation and srcset
         test_cases = [
             ("https://example.com/image.webp", "f_webp"),
-            ("https://example.com/image.avif", "f_avif")
+            ("https://example.com/image.avif", "f_avif"),
         ]
 
         for test_url, expected_format in test_cases:
@@ -268,7 +269,7 @@ class TestImageTemplate(unittest.TestCase):
                     alt="Test Image",
                     width="500",
                     height="300",
-                    output_mode="attrs"
+                    output_mode="attrs",
                 )
 
                 # Should use Cloudinary URL with format preservation
@@ -297,7 +298,7 @@ class TestImageTemplate(unittest.TestCase):
             height="200",
             fill=True,
             e_sharpen=True,
-            output_mode="attrs"
+            output_mode="attrs",
         )
 
         # Should include fill and sharpen in both src and srcset
@@ -307,15 +308,12 @@ class TestImageTemplate(unittest.TestCase):
         self.assertIn("e_sharpen", attrs_result["srcset"])
 
     def test_svg_uses_cloudinary_with_f_svg(self):
-        """Test that SVG files use Cloudinary with f_svg format and no srcset"""
+        """Test that SVGs use Cloudinary with f_svg format and no srcset"""
         svg_url = "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
 
         # Test HTML output
         html_result = image_template(
-            url=svg_url,
-            alt="Test SVG",
-            width="200",
-            height="100"
+            url=svg_url, alt="Test SVG", width="200", height="100"
         )
 
         # Should use Cloudinary with f_svg
@@ -331,7 +329,7 @@ class TestImageTemplate(unittest.TestCase):
             alt="Test SVG",
             width="200",
             height="100",
-            output_mode="attrs"
+            output_mode="attrs",
         )
 
         # Should have Cloudinary URL with f_svg
@@ -356,7 +354,7 @@ class TestImageTemplate(unittest.TestCase):
             height="100",
             fill=True,
             e_sharpen=True,
-            output_mode="attrs"
+            output_mode="attrs",
         )
 
         # Should include fill and sharpen parameters

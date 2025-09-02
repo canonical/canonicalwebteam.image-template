@@ -52,13 +52,13 @@ def image_template(
         raise Exception("url must contain a hostname")
 
     # Determine format based on file extension and fmt parameter
-    file_extension = url_parts.path.lower().split('.')[-1]
+    file_extension = url_parts.path.lower().split(".")[-1]
 
     # Set format based on file type, using fmt parameter if provided
-    if file_extension == 'svg':
+    if file_extension == "svg":
         format_param = "f_svg" if fmt == "auto" else f"f_{fmt}"
         generate_srcset = False
-    elif file_extension in ['webp', 'avif']:
+    elif file_extension in ["webp", "avif"]:
         format_param = f"f_{file_extension}" if fmt == "auto" else f"f_{fmt}"
         generate_srcset = True
     else:
@@ -129,14 +129,19 @@ def image_template(
 
             # Generate srcset entries for standard widths
             filtered_widths = [
-                w for w in srcset_widths if w <= max_width_limit]
+                w for w in srcset_widths if w <= max_width_limit
+            ]
             srcset.extend(
-                create_srcset_url(w, cloudinary_options) for w in filtered_widths
+                create_srcset_url(w, cloudinary_options)
+                for w in filtered_widths
             )
 
             # Add original width if needed
             existing_widths = {int(w) for w in filtered_widths}
-            if width_int <= max_width_limit and width_int not in existing_widths:
+            if (
+                width_int <= max_width_limit
+                and width_int not in existing_widths
+            ):
                 srcset.append(create_srcset_url(width_int, cloudinary_options))
 
         image_srcset = ", ".join(srcset)
