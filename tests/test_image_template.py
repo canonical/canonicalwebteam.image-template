@@ -222,11 +222,11 @@ class TestImageTemplate(unittest.TestCase):
             f"{encoded_asset_url}"
         )
 
-        srcset_widths = [460, 620, 1036, 1681]
+        srcset_widths = [460, 620, 1036, 1681, 1920]
         srcset = []
         width = image_attrs["width"]
 
-        max_width_limit = min(width, 1681)
+        max_width_limit = min(width, 1920)
         for srcset_width in srcset_widths:
             if srcset_width <= max_width_limit:
                 srcset.append(
