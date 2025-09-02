@@ -116,6 +116,7 @@ def image_template(
 
         # Handle small images (≤460px) - generate 2x for high-DPI displays
         if width_int <= 460:
+            srcset.append(create_srcset_url(width_int, cloudinary_options))
             # Add 2x version for high-DPI displays to prevent pixelation
             srcset.append(create_srcset_url(width_int * 2, cloudinary_options))
         else:
