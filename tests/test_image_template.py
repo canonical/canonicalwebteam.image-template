@@ -157,7 +157,7 @@ class TestImageTemplate(unittest.TestCase):
         self.assertNotIn("1036w", markup)
 
     def test_small_images_generate_2x_srcset(self):
-        """Test that small images (≤100px) generate 2x srcset for high-DPI displays"""
+        """Test that small images (≤460px) generate 2x srcset for high-DPI displays"""
         html_result = image_template(
             url="https://example.com/image.jpg",
             alt="Test Image",
@@ -277,19 +277,19 @@ class TestImageTemplate(unittest.TestCase):
                 self.assertIn("q_auto", attrs_result["src"])
                 self.assertIn("fl_sanitize", attrs_result["src"])
                 self.assertIn("w_500", attrs_result["src"])
-                
+
                 # Should have srcset for images > 100px
                 self.assertIn("srcset", attrs_result)
                 self.assertIn("res.cloudinary.com", attrs_result["srcset"])
                 self.assertIn(expected_format, attrs_result["srcset"])
-                
+
                 # Should have sizes attribute
                 self.assertIn("sizes", attrs_result)
 
     def test_webp_avif_with_fill_and_sharpen(self):
         """Test that WebP and AVIF files respect fill and sharpen parameters"""
         test_url = "https://example.com/image.webp"
-        
+
         attrs_result = image_template(
             url=test_url,
             alt="Test Image",
@@ -309,7 +309,7 @@ class TestImageTemplate(unittest.TestCase):
     def test_svg_uses_cloudinary_with_f_svg(self):
         """Test that SVG files use Cloudinary with f_svg format and no srcset"""
         svg_url = "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
-        
+
         # Test HTML output
         html_result = image_template(
             url=svg_url,
@@ -348,7 +348,7 @@ class TestImageTemplate(unittest.TestCase):
     def test_svg_with_fill_and_sharpen(self):
         """Test that SVG files respect fill and e_sharpen parameters"""
         svg_url = "https://assets.ubuntu.com/v1/450d7c2f-openstack-hero.svg"
-        
+
         attrs_result = image_template(
             url=svg_url,
             alt="Test SVG",
