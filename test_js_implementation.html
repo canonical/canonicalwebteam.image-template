@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test page for JavaScript implementation of image template function with Cloudinary integration and format bypass logic">
+    <meta name="keywords" content="image template, javascript, cloudinary, responsive images, srcset, svg, webp, avif, gif">
+    <title>Image Template JavaScript Implementation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-result {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .rendered-image {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007acc;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #666;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Template JavaScript Implementation Test</h1>
+    <p>This page demonstrates the JavaScript implementation of the Python image_template function.</p>
+
+    <div class="test-section">
+        <h2>Test 1: Regular JPG Image with Cloudinary Processing</h2>
+        <div id="test1-result" class="test-result"></div>
+        <div id="test1-rendered" class="rendered-image"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: SVG Image (Bypasses Cloudinary)</h2>
+        <div id="test2-result" class="test-result"></div>
+        <div id="test2-rendered" class="rendered-image"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: WebP Image (Bypasses Cloudinary)</h2>
+        <div id="test3-result" class="test-result"></div>
+        <div id="test3-rendered" class="rendered-image"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: GIF Image (Bypasses Cloudinary)</h2>
+        <div id="test4-result" class="test-result"></div>
+        <div id="test4-rendered" class="rendered-image"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Image with Custom Attributes and Fill</h2>
+        <div id="test5-result" class="test-result"></div>
+        <div id="test5-rendered" class="rendered-image"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 6: Attributes Mode Output</h2>
+        <div id="test6-result" class="test-result"></div>
+    </div>
+
+    <script src="image_template.js"></script>
+    <script>
+        // Test 1: Regular JPG image with Cloudinary processing
+        const test1 = imageTemplate({
+            url: 'https://example.com/image.jpg',
+            alt: 'Test image',
+            width: 800,
+            height: 600,
+            loading: 'lazy'
+        });
+        document.getElementById('test1-result').textContent = test1;
+        document.getElementById('test1-rendered').innerHTML = test1;
+
+        // Test 2: SVG image (should bypass Cloudinary)
+        const test2 = imageTemplate({
+            url: 'https://example.com/logo.svg',
+            alt: 'SVG logo',
+            width: 200,
+            height: 100
+        });
+        document.getElementById('test2-result').textContent = test2;
+        document.getElementById('test2-rendered').innerHTML = test2;
+
+        // Test 3: WebP image (should bypass Cloudinary)
+        const test3 = imageTemplate({
+            url: 'https://example.com/modern.webp',
+            alt: 'WebP image',
+            width: 600,
+            height: 400
+        });
+        document.getElementById('test3-result').textContent = test3;
+        document.getElementById('test3-rendered').innerHTML = test3;
+
+        // Test 4: GIF image (should bypass Cloudinary)
+        const test4 = imageTemplate({
+            url: 'https://example.com/animation.gif',
+            alt: 'Animated GIF',
+            width: 300,
+            height: 200
+        });
+        document.getElementById('test4-result').textContent = test4;
+        document.getElementById('test4-rendered').innerHTML = test4;
+
+        // Test 5: Image with custom attributes and fill
+        const test5 = imageTemplate({
+            url: 'https://example.com/hero.png',
+            alt: 'Hero image',
+            width: 1200,
+            height: 800,
+            fill: true,
+            eSharpen: true,
+            fmt: 'webp',
+            attrs: {
+                'class': 'hero-image',
+                'data-testid': 'main-hero'
+            },
+            hiDef: true
+        });
+        document.getElementById('test5-result').textContent = test5;
+        document.getElementById('test5-rendered').innerHTML = test5;
+
+        // Test 6: Attributes mode output
+        const test6 = imageTemplate({
+            url: 'https://example.com/thumbnail.jpg',
+            alt: 'Thumbnail',
+            width: 150,
+            height: 150,
+            outputMode: 'attrs'
+        });
+        document.getElementById('test6-result').textContent = JSON.stringify(test6, null, 2);
+
+        // Log all tests to console for debugging
+        console.log('Test Results:');
+        console.log('Test 1 (JPG):', test1);
+        console.log('Test 2 (SVG):', test2);
+        console.log('Test 3 (WebP):', test3);
+        console.log('Test 4 (GIF):', test4);
+        console.log('Test 5 (Custom):', test5);
+        console.log('Test 6 (Attrs):', test6);
+    </script>
+</body>
+</html>
