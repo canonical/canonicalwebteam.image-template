@@ -100,7 +100,8 @@ def image_template(
     image_srcset = ""
     if generate_srcset:
         if srcset_widths is None:
-            srcset_widths = [460, 620, 1036, 1681]
+            # https://vanillaframework.io/docs/settings/breakpoint-settings
+            srcset_widths = [460, 620, 1036, 1681, 1920]
 
         width_int = int(width)
         srcset = []
