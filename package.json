@@ -1,0 +1,48 @@
+{
+  "name": "@canonical/image-template",
+  "version": "1.0.0",
+  "description": "JavaScript implementation of Canonical's image template function with Cloudinary integration and responsive image generation",
+  "main": "image_template.js",
+  "module": "image_template.js",
+  "types": "image_template.d.ts",
+  "files": [
+    "image_template.js",
+    "image_template.d.ts",
+    "README_JS.md"
+  ],
+  "scripts": {
+    "test": "node test_js_node.js",
+    "test:browser": "open test_js_implementation.html"
+  },
+  "keywords": [
+    "image",
+    "template",
+    "cloudinary",
+    "responsive",
+    "srcset",
+    "webp",
+    "svg",
+    "avif",
+    "gif",
+    "optimization",
+    "canonical"
+  ],
+  "author": "Canonical Web Team",
+  "license": "LGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canonical/canonicalwebteam.image-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/canonical/canonicalwebteam.image-template/issues"
+  },
+  "homepage": "https://github.com/canonical/canonicalwebteam.image-template#readme",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
