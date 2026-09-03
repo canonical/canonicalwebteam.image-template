@@ -67,11 +67,13 @@ def image_template(
 
     # Default cloudinary optimisations
     # https://cloudinary.com/documentation/image_transformations
-    cloudinary_options = [
-        format_param,
-        "q_auto",  # Auto optimise quality
-        "fl_sanitize",  # Sanitize SVG content
-    ]
+    cloudinary_options = [format_param]
+
+    # q_auto recompresses webp, corrupting animated frames (BRND-3566)
+    if file_extension != "webp":
+        cloudinary_options.append("q_auto")  # Auto optimise quality
+
+    cloudinary_options.append("fl_sanitize")  # Sanitize SVG content
 
     if e_sharpen:
         cloudinary_options.append("e_sharpen")

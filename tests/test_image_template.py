@@ -275,9 +275,14 @@ class TestImageTemplate(unittest.TestCase):
                 # Should use Cloudinary URL with format preservation
                 self.assertIn("res.cloudinary.com", attrs_result["src"])
                 self.assertIn(expected_format, attrs_result["src"])
-                self.assertIn("q_auto", attrs_result["src"])
                 self.assertIn("fl_sanitize", attrs_result["src"])
                 self.assertIn("w_500", attrs_result["src"])
+
+                # q_auto corrupts animated webp frames (BRND-3566)
+                if expected_format == "f_webp":
+                    self.assertNotIn("q_auto", attrs_result["src"])
+                else:
+                    self.assertIn("q_auto", attrs_result["src"])
 
                 # Should have srcset for images > 100px
                 self.assertIn("srcset", attrs_result)
