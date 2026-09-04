@@ -26,6 +26,7 @@ def image_template(
     sizes="(min-width: {}px) {}px, 100vw",
     srcset_widths=None,
     hi_def=False,
+    bypass_cloudinary=False,
 ):
     """
     Generate responsive image markup with optimized srcset and sizes.
@@ -44,12 +45,32 @@ def image_template(
         sizes: Responsive sizes attribute template
         srcset_widths: Custom widths for srcset generation
         hi_def: Enable high-DPI support (up to 2x)
+        bypass_cloudinary: Serve the url as-is, skipping Cloudinary
     """
 
     url_parts = urlparse(url)
 
     if not url_parts.netloc:
         raise Exception("url must contain a hostname")
+
+    if bypass_cloudinary:
+        image_attrs = {
+            "src": url,
+            "alt": alt,
+            "width": int(width),
+            "height": height,
+            "loading": loading,
+            "attrs": attrs,
+        }
+
+        if output_mode == "html":
+            return template.render(**image_attrs)
+        elif output_mode == "attrs":
+            merged_attrs = {**image_attrs, **attrs}
+            del merged_attrs["attrs"]
+            return merged_attrs
+        else:
+            raise ValueError("output_mode must be 'html' or 'attrs'")
 
     # Determine format based on file extension and fmt parameter
     file_extension = url_parts.path.lower().split(".")[-1]

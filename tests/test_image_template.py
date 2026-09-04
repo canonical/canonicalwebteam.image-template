@@ -251,8 +251,6 @@ class TestImageTemplate(unittest.TestCase):
 
         self.assertEqual(expected_attrs, returned_attrs)
 
-    # GIF handling removed as requested
-
     def test_webp_avif_use_cloudinary_with_srcset(self):
         # Test that WebP and AVIF files use Cloudinary
         # with format preservation and srcset
