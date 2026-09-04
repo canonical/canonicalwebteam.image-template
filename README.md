@@ -22,6 +22,7 @@ will:
 - `fill` (optional boolean): Set the crop mode to ["fill"](https://cloudinary.com/documentation/image_transformation_reference#crop_parameter)
 - `loading` (optional string, default: "lazy"): Set to ["auto" or "eager"](https://addyosmani.com/blog/lazy-loading/) to disable lazyloading
 - `fmt` (optional string, default: "auto"): Define the file format (e.g. `fmt="jpg"`)
+- `bypass_cloudinary` (optional boolean, default: `False`): Serve the url as-is instead of proxying through Cloudinary (e.g. for animated images, since Cloudinary truncates animations it transforms on the fly to 100 frames). All transformation parameters are ignored eg. hi_def, fill, e_sharpen
 - `attrs` (optional dictionary): Extra `<img>` attributes (e.g. `class` or `id`) can be passed as additional arguments
 - `output_mode` (optional string, default: "html"): The output mode can be set to either `html` or `attrs`. If set to `attrs`, the function will return an object with the image attributes instead of HTML markup.
 
