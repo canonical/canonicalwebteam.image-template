@@ -251,6 +251,48 @@ class TestImageTemplate(unittest.TestCase):
 
         self.assertEqual(expected_attrs, returned_attrs)
 
+    def test_bypass_cloudinary_html(self):
+        markup = image_template(
+            url=asset_url,
+            alt="test",
+            width="1920",
+            height="1080",
+            attrs={"class": "test-title"},
+            bypass_cloudinary=True,
+        )
+
+        self.assertIn(f'src="{asset_url}"', markup)
+        self.assertIn('alt="test"', markup)
+        self.assertIn('width="1920"', markup)
+        self.assertIn('height="1080"', markup)
+        self.assertIn('loading="lazy"', markup)
+        self.assertIn('class="test-title"', markup)
+        self.assertNotIn(cloudinary_url_base, markup)
+        self.assertNotIn("srcset", markup)
+
+    def test_bypass_cloudinary_attrs(self):
+        attrs_result = image_template(
+            url=asset_url,
+            alt="test",
+            width="1920",
+            height="1080",
+            attrs={"class": "test-title"},
+            bypass_cloudinary=True,
+            output_mode="attrs",
+        )
+
+        self.assertEqual(
+            attrs_result,
+            {
+                "src": asset_url,
+                "alt": "test",
+                "width": 1920,
+                "height": "1080",
+                "loading": "lazy",
+                "class": "test-title",
+            },
+        )
+
     def test_webp_avif_use_cloudinary_with_srcset(self):
         # Test that WebP and AVIF files use Cloudinary
         # with format preservation and srcset

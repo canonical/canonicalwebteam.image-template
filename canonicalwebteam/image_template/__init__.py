@@ -12,6 +12,17 @@ template = env.get_template("image_template.html")
 cloudinary_url_base = "https://res.cloudinary.com/canonical/image/fetch"
 
 
+def _render(image_attrs, output_mode):
+    if output_mode == "html":
+        return template.render(**image_attrs)
+    elif output_mode == "attrs":
+        merged_attrs = {**image_attrs, **image_attrs["attrs"]}
+        del merged_attrs["attrs"]
+        return merged_attrs
+    else:
+        raise ValueError("output_mode must be 'html' or 'attrs'")
+
+
 def image_template(
     url,
     alt,
@@ -45,7 +56,9 @@ def image_template(
         sizes: Responsive sizes attribute template
         srcset_widths: Custom widths for srcset generation
         hi_def: Enable high-DPI support (up to 2x)
-        bypass_cloudinary: Serve the url as-is, skipping Cloudinary
+        bypass_cloudinary: Serve the url as-is, skipping Cloudinary.
+            All transformation parameters are ignored eg. hi_def,
+            fill, e_sharpen
     """
 
     url_parts = urlparse(url)
@@ -54,23 +67,17 @@ def image_template(
         raise Exception("url must contain a hostname")
 
     if bypass_cloudinary:
-        image_attrs = {
-            "src": url,
-            "alt": alt,
-            "width": int(width),
-            "height": height,
-            "loading": loading,
-            "attrs": attrs,
-        }
-
-        if output_mode == "html":
-            return template.render(**image_attrs)
-        elif output_mode == "attrs":
-            merged_attrs = {**image_attrs, **attrs}
-            del merged_attrs["attrs"]
-            return merged_attrs
-        else:
-            raise ValueError("output_mode must be 'html' or 'attrs'")
+        return _render(
+            {
+                "src": url,
+                "alt": alt,
+                "width": int(width),
+                "height": height,
+                "loading": loading,
+                "attrs": attrs,
+            },
+            output_mode,
+        )
 
     # Determine format based on file extension and fmt parameter
     file_extension = url_parts.path.lower().split(".")[-1]
@@ -189,15 +196,7 @@ def image_template(
         image_attrs["srcset"] = image_srcset
         image_attrs["sizes"] = sizes
 
-    # Return based on output mode
-    if output_mode == "html":
-        return template.render(**image_attrs)
-    elif output_mode == "attrs":
-        merged_attrs = {**image_attrs, **attrs}
-        del merged_attrs["attrs"]
-        return merged_attrs
-    else:
-        raise ValueError("output_mode must be 'html' or 'attrs'")
+    return _render(image_attrs, output_mode)
 
 
 sys.modules[__name__] = image_template
