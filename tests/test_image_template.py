@@ -5,7 +5,6 @@ import unittest
 from canonicalwebteam import image_template
 from urllib.parse import quote, unquote
 
-
 asset_url = (
     "https://assets.ubuntu.com/" "v1/479958ed-vivid-hero-takeover-kylin.jpg"
 )
