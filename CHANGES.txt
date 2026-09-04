@@ -1,4 +1,3 @@
-v1.10.0, 2026-09-03: Skip q_auto for webp to avoid recompression
 v1.9.0, 2025-09-01: Skip srcsets for SVG and use initial fmt for SVG, WEBP & AVIF
 v1.8.0, 2025-07-29: Optimized srcset widths for responsive images
 v1.7.0, 2025-02-05: Encode urls to make sure wordpress images do not break
